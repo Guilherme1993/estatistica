@@ -1,0 +1,126 @@
+<style>
+    .mat-select-content-form {
+        width: 300px;
+    }
+</style>
+
+<mat-dialog-content class="mat-typography" style="text-align: center;">
+
+    <mat-horizontal-stepper [linear]="isLinear" [selectedIndex]="selectedIndex" #stepper (selectionChange)="processData($event)">
+
+        <mat-step [stepControl]="firstFormGroup">
+            <form [formGroup]="firstFormGroup">
+                <ng-template matStepLabel>Início</ng-template>
+                <p>Selecione uma opção abaixo</p>
+                <div fxLayout="row" fxLayoutWrap="wrap">
+
+                    <div fxFlex.sm="50" fxFlex.xs="100" fxFlex.md="50" fxFlex.lg="50" fxFlex.xl="50" fxFlex="50"
+                        class="m-gap p-gap">
+                        <button mat-stroked-button
+                            style="line-height: 25px; border-color: rgba(0,0,0,.12); height: 150px; white-space: pre-wrap !important;"
+                            matStepperNext (click)="inputData(0)">
+                            Inserir dados manualmente<br />
+                        </button>
+                    </div>
+                    <div fxFlex.sm="50" fxFlex.xs="100" fxFlex.md="50" fxFlex.lg="50" fxFlex.xl="50" fxFlex="50"
+                        class="m-gap p-gap">
+                        <button mat-stroked-button
+                            style="line-height: 25px; border-color: rgba(0,0,0,.12); height: 150px; white-space: pre-wrap !important;"
+                            matStepperNext (click)="inputData(1)">
+                            Inserir dados com arquivo csv<br />
+                        </button>
+                    </div>
+
+                </div>
+
+                <button mat-raised-button (click)="closeModal()">
+                    Cancelar
+                </button>
+            </form>
+        </mat-step>
+
+        <mat-step [stepControl]="secondFormGroup">
+            <form [formGroup]="secondFormGroup">
+                <ng-template matStepLabel>Entrada de Dados</ng-template>
+
+                <div *ngIf="inputWay == 0; else elseBlock">
+                    <mat-form-field class="example-full-width" style="width: 100%">
+                        <input matInput placeholder="Digite o nome da variável" [(ngModel)]="variableName"
+                            [ngModelOptions]="{standalone: true}" required>
+                    </mat-form-field>
+                    <mat-form-field class="example-full-width" style="width: 100%">
+                        <textarea matInput
+                            placeholder="Digite os valores separados por ponto e vírgula Ex: 23;3;43;45;4.5;60"
+                            [(ngModel)]="arr" [ngModelOptions]="{standalone: true}" cdkTextareaAutosize
+                            cdkAutosizeMinRows="1" cdkAutosizeMaxRows="5" required></textarea>
+                    </mat-form-field>
+                    <div>
+                        <button mat-raised-button matStepperPrevious>Voltar</button>
+                        <button mat-raised-button color="primary" matStepperNext>Próximo</button>
+                    </div>
+                </div>
+                <ng-template #elseBlock>
+                    <app-upload-csv #appUploadCsv></app-upload-csv>
+                </ng-template>
+
+            </form>
+
+        </mat-step>
+
+        <mat-step [stepControl]="thirdFormGroup">
+            <form [formGroup]="thirdFormGroup">
+                <ng-template matStepLabel>Tipo de variável</ng-template>
+                <p>Selecione o tipo de variável a ser calculada</p>
+                <div fxLayout="column">
+                    <mat-form-field class="ml-xs mr-xs my-flex-column" style="margin-right: 10px; margin-top: 10px">
+                        <mat-select placeholder="Selecione uma opção" [(ngModel)]="varType"
+                            [ngModelOptions]="{standalone: true}">
+                            <mat-option *ngFor="let c of varTypes" [value]="c.id">
+                                {{ c.name }}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                    <mat-radio-group name="my_options" [(ngModel)]="measureType" [ngModelOptions]="{standalone: true}"
+                        fxLayout="row" style="margin: 30px 20px 20px 20px" class="my-flex-line width-full">
+                        <mat-radio-button value="Sample">Amostra&nbsp; &nbsp;</mat-radio-button>
+                        <mat-radio-button value="Population">População</mat-radio-button>
+                    </mat-radio-group>
+                </div>
+                <div>
+                    <button mat-raised-button matStepperPrevious>Voltar</button>
+                    <button mat-raised-button color="primary" matStepperNext>Próximo</button>
+                </div>
+
+            </form>
+        </mat-step>
+
+        <mat-step [stepControl]="fourFormGroup">
+            <form [formGroup]="fourFormGroup">
+                <ng-template matStepLabel>Medida Separatriz</ng-template>
+                <p style="margin-top: 5px;">Selecione uma medida separatriz e o valor a ser calculado</p>
+                <div fxLayout="column">
+                    <mat-form-field class="ml-xs mr-xs my-flex-column">
+                        <mat-select placeholder="Selecione uma medida separatriz" [(ngModel)]="selectedMeasure"
+                            [ngModelOptions]="{standalone: true}">
+                            <mat-option *ngFor="let c of measures" [value]="c.id" (click)="definePortions(c.id)">
+                                {{ c.name }}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                    <mat-form-field class="ml-xs mr-xs my-flex-column">
+                        <mat-select placeholder="Selecione o valor" [(ngModel)]="selectedMeasureValue"
+                            [ngModelOptions]="{standalone: true}">
+                            <mat-option *ngFor="let c of measureOptions" [value]="c">
+                                {{ c }}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+                <button mat-raised-button matStepperPrevious>Voltar</button>
+                <button mat-raised-button color="primary" (click)="calc()">Calcular</button>
+            </form>
+        </mat-step>
+
+    </mat-horizontal-stepper>
+
+</mat-dialog-content>

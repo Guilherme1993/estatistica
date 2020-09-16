@@ -4,31 +4,36 @@ import { AuthGuard } from './account/shared/auth.guard';
 
 import { AuthenticationComponent } from './layout/authentication/authentication.component';
 import { HomeComponent } from './layout/home/home.component';
+import { DescritivaComponent } from './restricted/descritiva/descritiva.component';
 import { CreateAccountComponent } from './account/create-account/create-account.component';
 import { LoginComponent } from './account/login/login.component';
 
-export const AppRoutes: Routes = [
+export const AppRoutes: Routes = [{
+    path: '',
+    component: HomeComponent,
+    canActivate: [AuthGuard],
+    children: [{
+        path: '',
+        redirectTo: 'estatistica-descritiva',
+        pathMatch: 'full'
+    },
     {
+        path: 'estatistica-descritiva',
+        component: DescritivaComponent
+    }]
+}, {
+    path: '',
+    component: AuthenticationComponent,
+    children: [{
         path: '',
-        component: HomeComponent,
-        canActivate: [AuthGuard],
-        children: [{
-            path: '',
-            component: HomeComponent
-        }]
+        redirectTo: 'login',
+        pathMatch: 'full'
+    },
+    {
+        path: 'login',
+        component: LoginComponent
     }, {
-        path: '',
-        component: AuthenticationComponent,
-        children: [{
-            path: '',
-            redirectTo: 'login',
-            pathMatch: 'full'
-        },
-        {
-            path: 'login',
-            component: LoginComponent
-        }, {
-            path: 'create-account',
-            component: CreateAccountComponent
-        }]
-    }];
+        path: 'create-account',
+        component: CreateAccountComponent
+    }]
+}];

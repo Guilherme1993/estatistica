@@ -1,0 +1,124 @@
+<mat-card>
+    <mat-card-title>
+        Estatística Descritiva
+    </mat-card-title>
+
+    <hr>
+
+    <!-- <mat-card-content> -->
+    <button mat-raised-button color="primary" (click)="openCalcModal()">Novo Cálculo</button>
+    <!-- </mat-card-content> -->
+
+    <mat-card-content>
+
+    </mat-card-content>
+
+</mat-card>
+
+<mat-card *ngIf="show">
+    <mat-card-content>
+        <div class="example-container" *ngIf="selectedType != 4">
+            <table mat-table [dataSource]="frequencyData">
+
+
+                <ng-container matColumnDef="num">
+                    <th mat-header-cell *matHeaderCellDef> {{variable}} </th>
+                    <td mat-cell *matCellDef="let c"> {{c.num}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="fi">
+                    <th mat-header-cell *matHeaderCellDef> Frequência (fi) </th>
+                    <td mat-cell *matCellDef="let c"> {{c.fi}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="fi_percent">
+                    <th mat-header-cell *matHeaderCellDef> Frequência Relativa Percentual (fr %) </th>
+                    <td mat-cell *matCellDef="let c"> {{c.fiPercent}}% </td>
+                </ng-container>
+
+                <ng-container matColumnDef="fac">
+                    <th mat-header-cell *matHeaderCellDef> Frequência Acumulada (Fac) </th>
+                    <td mat-cell *matCellDef="let c"> {{c.fac}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="fac_percent">
+                    <th mat-header-cell *matHeaderCellDef> Fac Percentual </th>
+                    <td mat-cell *matCellDef="let c"> {{c.facPercent}}% </td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="['num','fi', 'fi_percent', 'fac', 'fac_percent']; sticky: true">
+                </tr>
+                <tr mat-row *matRowDef="let row; columns: ['num','fi', 'fi_percent', 'fac', 'fac_percent'];">
+                </tr>
+            </table>
+        </div>
+
+        <div class="example-container" *ngIf="selectedType == 4">
+            <table mat-table [dataSource]="frequencyData">
+
+
+                <ng-container matColumnDef="num">
+                    <th mat-header-cell *matHeaderCellDef> {{variable}} </th>
+                    <td mat-cell *matCellDef="let c"> {{c.min}} |----- {{c.max}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="fi">
+                    <th mat-header-cell *matHeaderCellDef> Frequência (fi) </th>
+                    <td mat-cell *matCellDef="let c"> {{c.fi}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="fi_percent">
+                    <th mat-header-cell *matHeaderCellDef> Frequência Relativa Percentual (fr %) </th>
+                    <td mat-cell *matCellDef="let c"> {{c.fiPercent}}% </td>
+                </ng-container>
+
+                <ng-container matColumnDef="fac">
+                    <th mat-header-cell *matHeaderCellDef> Frequência Acumulada (Fac) </th>
+                    <td mat-cell *matCellDef="let c"> {{c.fac}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="fac_percent">
+                    <th mat-header-cell *matHeaderCellDef> Fac Percentual </th>
+                    <td mat-cell *matCellDef="let c"> {{c.facPercent}}% </td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="['num','fi', 'fi_percent', 'fac', 'fac_percent']; sticky: true">
+                </tr>
+                <tr mat-row *matRowDef="let row; columns: ['num','fi', 'fi_percent', 'fac', 'fac_percent'];">
+                </tr>
+            </table>
+        </div>
+    </mat-card-content>
+</mat-card>
+
+<mat-card *ngIf="show && (selectedType == 1 || selectedType == 2)">
+    <div fxFlex.sm="50" fxFlex.xs="50" fxFlex.md="50" fxFlex.lg="50" fxFlex.xl="50" fxFlex="50" class="m-gap p-gap"
+      style="margin: 0 auto;">
+      <mat-card-content>
+        <div fxFlex.sm="100" fxFlex.xs="100" fxFlex.md="100" fxFlex.lg="100" fxFlex.xl="100" fxFlex="100"
+          class="m-gap p-gap">
+          <div class="chart">
+            <canvas baseChart [data]="pieChartData" [labels]="pieChartLabels" [chartType]="pieChartType"
+              [options]="pieChartOptions" [plugins]="pieChartPlugins" [colors]="pieChartColors" [legend]="pieChartLegend">
+            </canvas>
+          </div>
+        </div>
+      </mat-card-content>
+    </div>
+  </mat-card>
+  
+  <mat-card *ngIf="show && selectedType == 3">
+    <div fxFlex.sm="50" fxFlex.xs="50" fxFlex.md="50" fxFlex.lg="50" fxFlex.xl="50" fxFlex="50" class="m-gap p-gap"
+      style="margin: 0 auto;">
+      <mat-card-content>
+        <div fxFlex.sm="100" fxFlex.xs="100" fxFlex.md="100" fxFlex.lg="100" fxFlex.xl="100" fxFlex="100"
+          class="m-gap p-gap">
+          <div style="display: block">
+            <canvas baseChart [datasets]="barChartQuantDisc" [labels]="barChartLabels" [options]="barChartOptions"
+              [legend]="barChartLegend" [chartType]="barChartType" [colors]="barChartColors">
+            </canvas>
+          </div>
+        </div>
+      </mat-card-content>
+    </div>
+  </mat-card>
