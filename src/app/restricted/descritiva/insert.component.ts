@@ -1,7 +1,6 @@
 import { OnInit, Component, Inject, ViewChild, HostListener } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialog, MatSnackBar } from '@angular/material';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { BlockUI, NgBlockUI } from 'ng-block-ui';
 import { UploadCsvComponent } from '../upload-csv/upload-csv.component';
 
 @Component({
@@ -17,8 +16,6 @@ export class InsertComponent implements OnInit {
     secondFormGroup: FormGroup;
     thirdFormGroup: FormGroup;
     fourFormGroup: FormGroup;
-
-    @BlockUI() blockUI: NgBlockUI;
 
     public width = '0';
     public selectedIndex = 0;

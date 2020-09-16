@@ -1,5 +1,4 @@
 import { Component, OnInit, Inject, Input } from '@angular/core';
-import { NgBlockUI, BlockUI } from 'ng-block-ui';
 import { Documents } from './documents.model';
 import { MatSnackBar } from '@angular/material';
 
@@ -9,8 +8,6 @@ import { MatSnackBar } from '@angular/material';
   styleUrls: ['./upload-csv.component.scss']
 })
 export class UploadCsvComponent implements OnInit {
-
-  @BlockUI() blockUI: NgBlockUI;
 
   @Input() accept = '.csv';
   public files: Array<Documents> = [];

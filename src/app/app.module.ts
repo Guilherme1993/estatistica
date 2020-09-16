@@ -14,8 +14,6 @@ import { AuthenticationComponent } from './layout/authentication/authentication.
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { InsertComponent } from './restricted/descritiva/insert.component';
 
-import { BlockUIModule } from 'ng-block-ui';
-
 import { FlexLayoutModule } from '@angular/flex-layout';
 
 import { MatInputModule } from '@angular/material/input';
@@ -55,7 +53,6 @@ import { ChartsModule } from 'ng2-charts';
     MatCardModule,
     ReactiveFormsModule,
     MatStepperModule,
-    BlockUIModule.forRoot(),
     MatDialogModule,
     MatSnackBarModule,
     FlexLayoutModule,
