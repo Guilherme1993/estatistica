@@ -90,7 +90,9 @@ export class DescritivaComponent implements OnInit {
   // public pieChartData = [];
   // public pieChartColors = [];
   public sum = 0;
-
+  public media
+  public moda = []
+ 
   constructor(public dialog: MatDialog) { }
 
   ngOnInit() {
@@ -341,7 +343,7 @@ export class DescritivaComponent implements OnInit {
     }
 
     this.frequencyData[this.frequencyData.length - 1].facPercent = parseFloat('100').toFixed(2);
-
+    this.getModa();
     // if (this.selectedType == 3 || this.selectedType == 4) {
     //   this.getAverage();
     // } else {
@@ -349,4 +351,66 @@ export class DescritivaComponent implements OnInit {
     // }
   }
 
-}
+  public getModa(){
+    console.log(this.frequencyData)
+    let aux = 0
+    //encontrar qual é a maior frequencia dentre as variaveis
+    for(let i = 0; i < this.frequencyData.length; i++ ){
+      //se aux for menor que a frequencia
+      
+      if(this.frequencyData[aux].fi < this.frequencyData[i].fi){
+        //variavel aux guardará a posição do i
+        aux = i
+        console.log(`Aux: ${aux} , Fi: ${this.frequencyData[i].fi} , i: ${i}`)
+      }
+    }
+    console.log(`Aux: ${aux}`)
+    //Verificar se há frequencias maiores iguais
+    for(let i = 0; i < this.frequencyData.length; i++ ){
+      //verifico se existe outra posição com a mesma frequencia da maior
+      if(this.frequencyData[aux].fi == this.frequencyData[i].fi){
+        //adiciono ao vetor MODA mais um elemento.
+        this.moda.push(this.frequencyData[i].num)
+
+      }
+    }
+
+    console.log(`Moda: ${this.moda}`)
+    this.calcularMedia();
+  }
+
+
+  public calcularMedia(){
+    console.log(this.sortedVals)
+    let soma = 0;
+    let total= 0;
+    let freqTotal
+       
+    if (this.selectedType == 3){
+      for(let i = 0; i < this.sortedVals.length; i++){
+        soma = soma + parseFloat(this.sortedVals[i]);
+      }
+
+      this.media = soma/this.sortedVals.length;
+
+      console.log(`media: ${this.media}`)
+
+    }
+
+    if (this.selectedType==4){
+      for(let i= 0; i < this.sortedVals.length; i++){
+        this.media += (this.midPoints[i]*this.frequencyData[i].fi)
+                
+      }
+
+      freqTotal = this.frequencyData.length-1
+      console.log(freqTotal)
+      let total = this.media/this.frequencyData[freqTotal].fac
+      console.log(total)
+    }
+       
+
+    }  
+   
+  }
+
