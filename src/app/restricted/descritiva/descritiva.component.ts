@@ -389,7 +389,6 @@ export class DescritivaComponent implements OnInit {
   }
 
   public getModa() {
-    console.log(this.frequencyData)
     let aux = 0
     //encontrar qual é a maior frequencia dentre as variaveis
     for (let i = 0; i < this.frequencyData.length; i++) {
@@ -398,13 +397,15 @@ export class DescritivaComponent implements OnInit {
       if (this.frequencyData[aux].fi < this.frequencyData[i].fi) {
         //variavel aux guardará a posição do i
         aux = i
-        console.log(`Aux: ${aux} , Fi: ${this.frequencyData[i].fi} , i: ${i}`)
       }
     }
-    console.log(`Aux: ${aux}`)
     //Verificar se há frequencias maiores iguais
     for (let i = 0; i < this.frequencyData.length; i++) {
       //verifico se existe outra posição com a mesma frequencia da maior
+      if ((this.frequencyData[aux].fi == this.frequencyData[i].fi) && (this.selectedType == 4)){
+        this.moda.push(this.midPoints[i])
+      }
+      else
       if (this.frequencyData[aux].fi == this.frequencyData[i].fi) {
         //adiciono ao vetor MODA mais um elemento.
         this.moda.push(this.frequencyData[i].num)
@@ -418,34 +419,27 @@ export class DescritivaComponent implements OnInit {
 
 
   public calcularMedia() {
-    console.log(this.sortedVals)
+    console.log(this.frequencyData)
     let soma = 0;
-    let total = 0;
-    let freqTotal
+    let freqTotal = this.frequencyData.length - 1
 
-    if (this.selectedType == 3) {
-      for (let i = 0; i < this.sortedVals.length; i++) {
-        soma = soma + parseFloat(this.sortedVals[i]);
+    if (this.selectedType == 3)  {
+      for (let i = 0; i < this.frequencyData.length; i++) {
+        soma += (this.frequencyData[i].num) * (this.frequencyData[i].fi)
       }
-
-      this.media = soma / this.sortedVals.length;
-
+      
+      this.media = soma / (this.frequencyData[freqTotal].fac)
       console.log(`media: ${this.media}`)
-
     }
-
-    if (this.selectedType == 4) {
-      for (let i = 0; i < this.sortedVals.length; i++) {
-        this.media += (this.midPoints[i] * this.frequencyData[i].fi)
-
+    else if(this.selectedType == 4){
+      for (let i = 0; i < this.frequencyData.length; i++) {
+        soma += (this.frequencyData[i].fi) * (this.frequencyData[i].midPoint)
       }
-
-      freqTotal = this.frequencyData.length - 1
-      console.log(freqTotal)
-      let total = this.media / this.frequencyData[freqTotal].fac
-      console.log(total)
+      
+      this.media = soma/this.frequencyData[freqTotal].fac
+      console.log(`media: ${this.media}`)
     }
-
+    
 
   }
 
