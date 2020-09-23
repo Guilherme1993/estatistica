@@ -29,6 +29,7 @@ export class InsertComponent implements OnInit {
     public selectedMeasureValue = 0;
     public measureOptions = [];
     public measureType = '';
+    public isCsv = false;
 
     constructor(
         public dialogRef: MatDialogRef<InsertComponent>,
@@ -54,6 +55,8 @@ export class InsertComponent implements OnInit {
         });
 
         this.width = localStorage.getItem('width');
+
+        console.log(this.arr)
     }
 
     @HostListener('click', ['$event'])
@@ -64,6 +67,8 @@ export class InsertComponent implements OnInit {
             console.log('deu certo aqui!')
 
             this.arr = this.appUploadCsv.arr;
+
+            this.isCsv = true;
 
         }
 
@@ -94,7 +99,7 @@ export class InsertComponent implements OnInit {
 
     public processData(event: any): void {
         if (event.selectedIndex == 2) {
-            this.arr = this.arr.trim().split(';')
+            // this.arr = this.arr.trim().split(';')
         }
     }
 
@@ -106,7 +111,8 @@ export class InsertComponent implements OnInit {
             measure: this.selectedMeasure,
             measureValue: this.selectedMeasureValue,
             varType: this.varType,
-            measureType: this.measureType
+            measureType: this.measureType,
+            isCsv: this.isCsv
         }
 
         this.dialogRef.close(result);
