@@ -96,7 +96,10 @@ export class DescritivaComponent implements OnInit {
   public arr;
 
   public media = 0;
-  public moda = []
+  public moda = [];
+  public desvioPadrao = '0';
+  public measureType = '';
+
 
   constructor(public dialog: MatDialog) { }
 
@@ -125,6 +128,8 @@ export class DescritivaComponent implements OnInit {
     this.selectedType = result.varType;
     this.variable = result.varName;
     this.isCsv = result.isCsv;
+    this.measureType = result.measureType;
+
 
     this.arr = result.arr;
 
@@ -439,7 +444,7 @@ export class DescritivaComponent implements OnInit {
       this.media = soma/this.frequencyData[freqTotal].fac
       console.log(`media: ${this.media}`)
     }
-    
+    this.desvioPad()
 
   }
 
@@ -464,5 +469,34 @@ export class DescritivaComponent implements OnInit {
     this.barChartQuantDisc = [
       { data: [0, 0, 0, 0], label: 'Quant. Discreta' }
     ];
+  }
+
+  public desvioPad() {
+    
+  let media = this.media
+  let frequenciaTotal = this.frequencyData[this.frequencyData.length - 1].fac
+  let somaTotal = 0
+    
+  if(this.selectedType == 3){ //quantitativa discreta
+    for(var i = 0; i < this.frequencyData.length; i++){
+      somaTotal += ((this.frequencyData[i].num - media) ** 2) * this.frequencyData[i].fi
+
+    }
+
+  }else if(this.selectedType == 4){ //quantitativa continua
+    for(var i = 0; i < this.frequencyData.length; i++){
+      somaTotal += ((this.midPoints[i] - media) ** 2) * this.frequencyData[i].fi
+    }
+  }
+
+  if(this.measureType == "Sample"){  
+    this.desvioPadrao = Math.sqrt(somaTotal / (frequenciaTotal - 1)).toFixed(2)
+    
+  }
+  else{     //Population
+    this.desvioPadrao = Math.sqrt(somaTotal / (frequenciaTotal)).toFixed(2)
+
+  }
+  console.log(`Desvio Padrão: ${this.desvioPadrao}`)
   }
 }

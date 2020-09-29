@@ -102,6 +102,10 @@
     <span style="margin: 5px" *ngIf="selectedType == 3 || selectedType == 4"><strong>Média:</strong>&nbsp;
       <i>{{media}}</i></span>
     <span style="margin: 5px"><strong>Moda:</strong>&nbsp; <i>{{moda}}</i></span>
+    <span style="margin: 5px" *ngIf="selectedType == 1 || selectedType == 2"><strong>Desvio Padrão:</strong>&nbsp; <i>Desvio Padrão
+      inexistente em variáveis qualitativas</i></span>
+  <span style="margin: 5px" *ngIf="selectedType == 3 || selectedType == 4"><strong>Desvio Padrão:</strong>&nbsp;
+    <i>{{desvioPadrao}}</i></span>
   </div>
 </mat-card>
 
