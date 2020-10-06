@@ -102,10 +102,18 @@
     <span style="margin: 5px" *ngIf="selectedType == 3 || selectedType == 4"><strong>Média:</strong>&nbsp;
       <i>{{media}}</i></span>
     <span style="margin: 5px"><strong>Moda:</strong>&nbsp; <i>{{moda}}</i></span>
-    <span style="margin: 5px" *ngIf="selectedType == 1 || selectedType == 2"><strong>Desvio Padrão:</strong>&nbsp; <i>Desvio Padrão
-      inexistente em variáveis qualitativas</i></span>
-  <span style="margin: 5px" *ngIf="selectedType == 3 || selectedType == 4"><strong>Desvio Padrão:</strong>&nbsp;
-    <i>{{desvioPadrao}}</i></span>
+    <span style="margin: 5px"><strong>Mediana:</strong>&nbsp; <i>{{median}}</i></span>
+    <span style="margin: 5px" *ngIf="selectedType == 1 || selectedType == 2"><strong>Desvio Padrão:</strong>&nbsp;
+      <i>Desvio Padrão
+        inexistente em variáveis qualitativas</i></span>
+    <span style="margin: 5px" *ngIf="selectedType == 1 || selectedType == 2"><strong>Coeficiente de
+        Variação:</strong>&nbsp; <i>Coeficiente de Variação
+        inexistente em variáveis qualitativas</i></span>
+    <span style="margin: 5px" *ngIf="selectedType == 3 || selectedType == 4"><strong>Desvio Padrão:</strong>&nbsp;
+      <i>{{desvioPadrao}}</i></span>
+    <span style="margin: 5px" *ngIf="selectedType == 3 || selectedType == 4"><strong>Coeficiente de
+        Variação:</strong>&nbsp; <i>{{variationCo}}%</i></span>
+    <span style="margin: 5px"><strong>Medida Separatriz Calculada:</strong>&nbsp; <i>{{calculatedMeasure}}</i></span>
   </div>
 </mat-card>
 
@@ -134,6 +142,22 @@
         <div style="display: block">
           <canvas baseChart [datasets]="barChartQuantDisc" [labels]="barChartLabels" [options]="barChartOptions"
             [legend]="barChartLegend" [chartType]="barChartType" [colors]="barChartColors">
+          </canvas>
+        </div>
+      </div>
+    </mat-card-content>
+  </div>
+</mat-card>
+
+<mat-card *ngIf="show && selectedType == 4">
+  <div fxFlex.sm="50" fxFlex.xs="50" fxFlex.md="50" fxFlex.lg="50" fxFlex.xl="50" fxFlex="50" class="m-gap p-gap"
+    style="margin: 0 auto;">
+    <mat-card-content>
+      <div fxFlex.sm="100" fxFlex.xs="100" fxFlex.md="100" fxFlex.lg="100" fxFlex.xl="100" fxFlex="100"
+        class="m-gap p-gap">
+        <div style="display: block">
+          <canvas baseChart [datasets]="barChartQuantDisc1" [labels]="barChartLabels1" [options]="barChartOptions1"
+            [legend]="barChartLegend1" [chartType]="barChartType1" [colors]="barChartColors1">
           </canvas>
         </div>
       </div>

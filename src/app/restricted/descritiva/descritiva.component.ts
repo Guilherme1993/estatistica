@@ -49,6 +49,43 @@ export class DescritivaComponent implements OnInit {
   };
   //FIM BARRAS
 
+  //BARRAS
+  public barChartLabels1: any[] = [];
+
+  public barChartType1: ChartType = 'bar';
+
+  public barChartLegend1 = true;
+
+  public barChartColors1 = [
+    {
+      backgroundColor: ['rgb(79, 72, 157)', 'rgb(79, 72, 157)', 'rgb(79, 72, 157)', 'rgb(79, 72, 157)'],
+    },
+  ];
+
+  public barChartOptions1: ChartOptions = {
+    responsive: true,
+    scales: { xAxes: [{}], yAxes: [{ ticks: { beginAtZero: true } }] },
+    plugins: {
+      datalabels: {
+        anchor: 'end',
+        align: 'end',
+      },
+      datasets: {
+        barPercentage: 2
+      }
+    }
+  };
+
+  public barChartQuantDisc1: ChartDataSets[] = [
+    { data: [0, 0, 0, 0], label: 'Quantitativa' }
+  ];
+
+  public insightChartReset1 = {
+    labelTable: 'Variável/Frequência',
+    fi: 0
+  };
+  //FIM BARRAS
+
   // PIZZA
   public pieChartOptions: ChartOptions = {
     responsive: true,
@@ -83,13 +120,7 @@ export class DescritivaComponent implements OnInit {
   public midPoints = [];
   public frequencyData = [];
   public show = false;
-  // public barChartLabels = [];
-  // public barChartColors = [];
-  // public barChartQuantDisc = [];
-  // public pieChartLabels = [];
   public variable = '';
-  // public pieChartData = [];
-  // public pieChartColors = [];
   public sum = 0;
   public descritivaObj = <Descritiva>{};
   public isCsv = false;
@@ -99,7 +130,12 @@ export class DescritivaComponent implements OnInit {
   public moda = [];
   public desvioPadrao = '0';
   public measureType = '';
-
+  public selectedMeasure = 0;
+  public selectedMeasureValue = 0;
+  public calculatedMeasure = 0;
+  public variationCo = '0';
+  public median = '0';
+  public valAux;
 
   constructor(public dialog: MatDialog) { }
 
@@ -129,11 +165,10 @@ export class DescritivaComponent implements OnInit {
     this.variable = result.varName;
     this.isCsv = result.isCsv;
     this.measureType = result.measureType;
-
+    this.selectedMeasure = result.measure;
+    this.selectedMeasureValue = result.measureValue;
 
     this.arr = result.arr;
-
-    console.log(this.arr);
 
     let valores;
 
@@ -182,6 +217,11 @@ export class DescritivaComponent implements OnInit {
           return parseInt(a || 0, 10) - parseInt(b || 0, 10);
         });
       } else {
+
+        // this.sortedVals = valores.sort((a, b) => a - b);
+        this.valAux = valores;
+        this.valAux = this.valAux.sort((a, b) => a - b);
+
         let intervals = this.calcIntervals(valores);
 
         let tableInfo = intervals.map((interval) => {
@@ -205,7 +245,10 @@ export class DescritivaComponent implements OnInit {
             auxObj.midPoint = tableInfo[i].midPoint;
             auxObj.fi = tableInfo[i].frequency;
             this.frequencyData.push(auxObj);
-            this.midPoints.push(tableInfo[i].midPoint * tableInfo[i].frequency)
+            // this.midPoints.push(tableInfo[i].midPoint * tableInfo[i].frequency)
+            this.midPoints.push(tableInfo[i].midPoint)
+
+            this.barChartLabels1.push(`${auxObj.min} |----- ${auxObj.max}`)
           }
         }
       }
@@ -223,7 +266,6 @@ export class DescritivaComponent implements OnInit {
       } else {
         valores = this.arr.trim().split(/\s*;\s*/).map(String);
       }
-      console.log(valores)
       this.sortedVals = valores.sort()
     }
 
@@ -313,6 +355,24 @@ export class DescritivaComponent implements OnInit {
         },
       ];
 
+    } else {
+      for (let i in this.frequencyData) {
+
+        auxData.push(this.frequencyData[i].fi)
+
+        auxColor.push('rgb(79, 72, 157)')
+
+      }
+
+      this.barChartColors1 = [
+        {
+          backgroundColor: auxColor,
+        },
+      ];
+
+      this.barChartQuantDisc1 = [
+        { data: auxData, label: this.variable, barPercentage: 1.25 }
+      ];
     }
 
     this.calcFr(this.frequencyData);
@@ -335,7 +395,9 @@ export class DescritivaComponent implements OnInit {
       result[i] = { min: Math.round(n), max: Math.round(Math.min(n + groupLength)) }
       n += groupLength;
     }
-
+    console.log(`INTERVALOS`)
+    console.log(result)
+    console.log('---------------------')
     return result;
   }
 
@@ -407,44 +469,152 @@ export class DescritivaComponent implements OnInit {
     //Verificar se há frequencias maiores iguais
     for (let i = 0; i < this.frequencyData.length; i++) {
       //verifico se existe outra posição com a mesma frequencia da maior
-      if ((this.frequencyData[aux].fi == this.frequencyData[i].fi) && (this.selectedType == 4)){
+      if ((this.frequencyData[aux].fi == this.frequencyData[i].fi) && (this.selectedType == 4)) {
         this.moda.push(this.midPoints[i])
       }
       else
-      if (this.frequencyData[aux].fi == this.frequencyData[i].fi) {
-        //adiciono ao vetor MODA mais um elemento.
-        this.moda.push(this.frequencyData[i].num)
+        if (this.frequencyData[aux].fi == this.frequencyData[i].fi) {
+          //adiciono ao vetor MODA mais um elemento.
+          this.moda.push(this.frequencyData[i].num)
 
-      }
+        }
     }
 
-    console.log(`Moda: ${this.moda}`)
     this.calcularMedia();
   }
 
 
   public calcularMedia() {
-    console.log(this.frequencyData)
     let soma = 0;
     let freqTotal = this.frequencyData.length - 1
 
-    if (this.selectedType == 3)  {
+    if (this.selectedType == 3) {
       for (let i = 0; i < this.frequencyData.length; i++) {
         soma += (this.frequencyData[i].num) * (this.frequencyData[i].fi)
       }
-      
+
       this.media = soma / (this.frequencyData[freqTotal].fac)
-      console.log(`media: ${this.media}`)
     }
-    else if(this.selectedType == 4){
+    else if (this.selectedType == 4) {
       for (let i = 0; i < this.frequencyData.length; i++) {
         soma += (this.frequencyData[i].fi) * (this.frequencyData[i].midPoint)
       }
-      
-      this.media = soma/this.frequencyData[freqTotal].fac
-      console.log(`media: ${this.media}`)
+
+      this.media = soma / this.frequencyData[freqTotal].fac
     }
     this.desvioPad()
+
+  }
+
+  public desvioPad() {
+
+    let media = this.media
+    let frequenciaTotal = this.frequencyData[this.frequencyData.length - 1].fac
+    let somaTotal = 0
+
+    if (this.selectedType == 3) { //quantitativa discreta
+      for (var i = 0; i < this.frequencyData.length; i++) {
+        somaTotal += ((this.frequencyData[i].num - media) ** 2) * this.frequencyData[i].fi
+
+      }
+
+    } else if (this.selectedType == 4) { //quantitativa continua
+      console.log(`FrequencyData`)
+      console.log(this.frequencyData)
+      console.log('-------------------------')
+      console.log(`midPoints: ${this.midPoints}`)
+      for (var i = 0; i < this.frequencyData.length; i++) {
+        somaTotal += ((this.midPoints[i] - media) ** 2) * this.frequencyData[i].fi
+      }
+    }
+
+    if (this.measureType == "Sample") {
+      this.desvioPadrao = Math.sqrt(somaTotal / (frequenciaTotal - 1)).toFixed(2)
+
+    }
+    else {     //Population
+      this.desvioPadrao = Math.sqrt(somaTotal / (frequenciaTotal)).toFixed(2)
+
+    }
+
+    let variacao = (Number(this.desvioPadrao) / media) * 100
+
+    this.variationCo = parseFloat(variacao.toString()).toFixed(2);
+
+    this.calcSeparatingMeasures();
+  }
+
+  public calcSeparatingMeasures() {
+
+    let valorPorcentagem = 0;
+
+    switch (this.selectedMeasure) {
+      case 4:
+        valorPorcentagem = this.selectedMeasureValue * 25;
+        break;
+      case 5:
+        valorPorcentagem = this.selectedMeasureValue * 20;
+        break;
+      case 10:
+        valorPorcentagem = this.selectedMeasureValue * 10;
+        break;
+      case 100:
+        valorPorcentagem = this.selectedMeasureValue;
+        break;
+    }
+
+
+    let posicao = (valorPorcentagem * this.frequencyData[this.frequencyData.length - 1].fac) / 100;
+
+    if (this.selectedType != 4) {
+      this.calculatedMeasure = this.sortedVals[Math.round(posicao) - 1]
+    } else {
+      this.calculatedMeasure = this.valAux[Math.round(posicao) - 1]
+    }
+
+    this.calcMedian();
+
+  }
+
+  public calcMedian() {
+
+    if (this.sortedVals.length % 2 === 0) {
+
+      let meio;
+      let meio1;
+      let meio2;
+
+      if (this.selectedType != 4) {
+        meio = this.sortedVals.length / 2;
+        meio1 = this.sortedVals[meio - 1]
+        meio2 = this.sortedVals[meio];
+      } else {
+        meio = this.valAux.length / 2;
+        meio1 = this.valAux[meio - 1]
+        meio2 = this.valAux[meio];
+      }
+
+
+      if (this.selectedType == 3 || this.selectedType == 4) {
+        let aux = (meio1 + meio2) / 2
+        // let aux2 = parseFloat(aux.toString());
+        this.median = aux.toFixed(2);
+      } else {
+
+        this.median = meio1 + " e " + meio2
+      }
+    } else {
+      let esq = 0;
+      let dir = this.sortedVals.length - 1;
+      let meio;
+      meio = (esq + dir) / 2;
+
+      if (this.selectedType == 3 || this.selectedType == 4) {
+        this.median = parseFloat(this.sortedVals[meio]).toFixed(2);
+      } else {
+        this.median = this.sortedVals[meio];
+      }
+    }
 
   }
 
@@ -459,7 +629,15 @@ export class DescritivaComponent implements OnInit {
     this.variable = '';
     this.arr = '';
     this.media = 0;
-    this.moda = []
+    this.moda = [];
+    this.desvioPadrao = '0';
+    this.measureType = '';
+    this.selectedMeasure = 0;
+    this.selectedMeasureValue = 0;
+    this.calculatedMeasure = 0;
+    this.variationCo = '0';
+    this.median = '0';
+
     this.barChartColors = [
       {
         backgroundColor: ['rgb(79, 72, 157)', 'rgb(79, 72, 157)', 'rgb(79, 72, 157)', 'rgb(79, 72, 157)'],
@@ -469,34 +647,5 @@ export class DescritivaComponent implements OnInit {
     this.barChartQuantDisc = [
       { data: [0, 0, 0, 0], label: 'Quant. Discreta' }
     ];
-  }
-
-  public desvioPad() {
-    
-  let media = this.media
-  let frequenciaTotal = this.frequencyData[this.frequencyData.length - 1].fac
-  let somaTotal = 0
-    
-  if(this.selectedType == 3){ //quantitativa discreta
-    for(var i = 0; i < this.frequencyData.length; i++){
-      somaTotal += ((this.frequencyData[i].num - media) ** 2) * this.frequencyData[i].fi
-
-    }
-
-  }else if(this.selectedType == 4){ //quantitativa continua
-    for(var i = 0; i < this.frequencyData.length; i++){
-      somaTotal += ((this.midPoints[i] - media) ** 2) * this.frequencyData[i].fi
-    }
-  }
-
-  if(this.measureType == "Sample"){  
-    this.desvioPadrao = Math.sqrt(somaTotal / (frequenciaTotal - 1)).toFixed(2)
-    
-  }
-  else{     //Population
-    this.desvioPadrao = Math.sqrt(somaTotal / (frequenciaTotal)).toFixed(2)
-
-  }
-  console.log(`Desvio Padrão: ${this.desvioPadrao}`)
   }
 }
