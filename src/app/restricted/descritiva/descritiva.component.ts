@@ -519,10 +519,6 @@ export class DescritivaComponent implements OnInit {
       }
 
     } else if (this.selectedType == 4) { //quantitativa continua
-      console.log(`FrequencyData`)
-      console.log(this.frequencyData)
-      console.log('-------------------------')
-      console.log(`midPoints: ${this.midPoints}`)
       for (var i = 0; i < this.frequencyData.length; i++) {
         somaTotal += ((this.midPoints[i] - media) ** 2) * this.frequencyData[i].fi
       }
