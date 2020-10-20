@@ -172,39 +172,8 @@ export class DescritivaComponent implements OnInit {
 
     let valores;
 
-    // let obj = valores.reduce(function (object, item) {
-
-    //   if (!object[item]) {
-    //     object[item] = 1;
-    //   } else {
-    //     object[item]++;
-    //   }
-    //   return object;
-    // }, {})
-
-    // console.log(obj)
-
-    // if (this.selectedType >= 3) {
-    //   this.barChartLabels = Object.keys(obj);
-    //   let values = Object.values(obj);
-    //   this.barChartQuantDisc = [
-    //     { data: values, label: this.variable }
-    //   ];
-
-    //   for (let i = 0; i < values.length; i++) {
-    //     this.descritivaObj.name = this.barChartLabels[i];
-    //     // this.descritivaObj.fi = values[i]
-    //   }
-
-    // } else {
-
-    //   this.pieChartLabels = Object.keys(obj);
-    //   this.pieChartData = Object.values(obj);
-
-    // }
-
     if (this.selectedType >= 3) {
-      let valores = result.arr;
+      valores = result.arr;
       if (!this.isCsv) {
         valores = valores.replace(/;\s/g, ';');
         valores = this.arr.trim().split(";").map(Number);
@@ -212,15 +181,16 @@ export class DescritivaComponent implements OnInit {
         valores = this.arr.trim().split(/\s*;\s*/).map(Number);
       }
 
-      if (this.selectedType != 4) {
-        this.sortedVals = valores.slice(0).sort((a, b) => {
-          return parseInt(a || 0, 10) - parseInt(b || 0, 10);
-        });
-      } else {
+      // if (this.selectedType != 4) {
 
-        // this.sortedVals = valores.sort((a, b) => a - b);
-        this.valAux = valores;
-        this.valAux = this.valAux.sort((a, b) => a - b);
+        this.sortedVals = valores.sort((a,b) => a - b);
+
+      // } else {
+        if (this.selectedType == 4) {
+
+        // this.valAux = valores;
+        // this.valAux = this.valAux.sort((a, b) => a - b);
+        this.valAux = this.sortedVals;
 
         let intervals = this.calcIntervals(valores);
 
@@ -259,7 +229,7 @@ export class DescritivaComponent implements OnInit {
       // var novaArr = this.sortedVals.filter((este, i) => this.sortedVals.indexOf(este) === i);
 
     } else {
-      let valores = result.arr;
+      valores = result.arr;
       if (!this.isCsv) {
         // valores = valores.replace(/;\s/g, ';');
         valores = this.arr.split(";").map(String);
@@ -268,6 +238,110 @@ export class DescritivaComponent implements OnInit {
       }
       this.sortedVals = valores.sort()
     }
+
+    console.log(valores)
+
+    // valores = valores.map(s => s.trim());
+    valores = valores.map(Function.prototype.call, String.prototype.trim)
+
+    console.log(valores)
+
+    let obj = valores.reduce(function (object, item) {
+
+      if (!object[item]) {
+        object[item] = 1;
+      } else {
+        object[item]++;
+      }
+      return object;
+    }, {})
+
+    console.log(obj)
+
+    // if (this.selectedType >= 3) {
+    //   this.barChartLabels = Object.keys(obj);
+    //   let values = Object.values(obj);
+    //   this.barChartQuantDisc = [
+    //     { data: values, label: this.variable }
+    //   ];
+
+    //   for (let i = 0; i < values.length; i++) {
+    //     this.descritivaObj.name = this.barChartLabels[i];
+    //     // this.descritivaObj.fi = values[i]
+    //   }
+
+    // } else {
+
+    //   this.pieChartLabels = Object.keys(obj);
+    //   this.pieChartData = Object.values(obj);
+
+    // }
+
+    // if (this.selectedType >= 3) {
+    //   let valores = result.arr;
+    //   if (!this.isCsv) {
+    //     valores = valores.replace(/;\s/g, ';');
+    //     valores = this.arr.trim().split(";").map(Number);
+    //   } else {
+    //     valores = this.arr.trim().split(/\s*;\s*/).map(Number);
+    //   }
+
+    //   if (this.selectedType != 4) {
+    //     this.sortedVals = valores.slice(0).sort((a, b) => {
+    //       return parseInt(a || 0, 10) - parseInt(b || 0, 10);
+    //     });
+    //   } else {
+
+    //     // this.sortedVals = valores.sort((a, b) => a - b);
+    //     this.valAux = valores;
+    //     this.valAux = this.valAux.sort((a, b) => a - b);
+
+    //     let intervals = this.calcIntervals(valores);
+
+    //     let tableInfo = intervals.map((interval) => {
+    //       let min = interval.min, max = interval.max;
+
+    //       return {
+    //         midPoint: (min + max) / 2,
+    //         frequency: valores.map((n) => {
+    //           return (n < max && n >= min) ? 1 : 0;
+    //         }).reduce((a, b) => {
+    //           return a + b;
+    //         })
+    //       };
+    //     });
+
+    //     for (let i = 0; i < intervals.length; i++) {
+    //       let auxObj = <any>{};
+    //       if (tableInfo[i].frequency > 0) {
+    //         auxObj.min = intervals[i].min
+    //         auxObj.max = intervals[i].max
+    //         auxObj.midPoint = tableInfo[i].midPoint;
+    //         auxObj.fi = tableInfo[i].frequency;
+    //         this.frequencyData.push(auxObj);
+    //         // this.midPoints.push(tableInfo[i].midPoint * tableInfo[i].frequency)
+    //         this.midPoints.push(tableInfo[i].midPoint)
+
+    //         this.barChartLabels1.push(`${auxObj.min} |----- ${auxObj.max}`)
+    //       }
+    //     }
+    //   }
+
+    //   // SOMA TOTAL
+    //   // this.totalSum = valores.reduce((a, b) => { return a + b });
+
+    //   // var novaArr = this.sortedVals.filter((este, i) => this.sortedVals.indexOf(este) === i);
+
+    // } else {
+    //   let valores = result.arr;
+    //   if (!this.isCsv) {
+    //     // valores = valores.replace(/;\s/g, ';');
+    //     valores = this.arr.split(";").map(String);
+    //   } else {
+    //     valores = this.arr.trim().split(/\s*;\s*/).map(String);
+    //   }
+    //   this.sortedVals = valores.sort()
+    // }
 
     // console.log(obj)
 
@@ -293,6 +367,61 @@ export class DescritivaComponent implements OnInit {
 
     }
 
+    this.calcFr(this.frequencyData);
+    this.show = true;
+  }
+
+  public calcIntervals(vals) {
+    let intervals = vals.slice(0).sort((a, b) => {
+      return parseInt(a || 0, 10) - parseInt(b || 0, 10);
+    });
+    let maxNum = intervals[intervals.length - 1];
+    let minNum = intervals[0];
+    let groupCount = Math.round(1 + 3.22 * Math.log10(intervals.length));
+    let groupLength = (maxNum - minNum) / groupCount;
+    groupLength = groupLength + 1;
+    //window.document.write(groupLength); 
+    let result = [], n = minNum;
+
+    for (let i = 0; i < groupCount; i++) {
+      result[i] = { min: Math.round(n), max: Math.round(Math.min(n + groupLength)) }
+      n += groupLength;
+    }
+    return result;
+  }
+
+  public calcFr(arr) {
+
+    if (this.selectedType == 1) {
+      this.frequencyData.sort(function (a, b) {
+        return a.fi < b.fi ? -1 : a.fi > b.fi ? 1 : 0;
+      });
+    }
+
+    this.sum = 0;
+    for (let i in arr) {
+      if (this.sum == 0) {
+        this.sum = arr[i].fi
+      } else {
+        this.sum = this.sum + arr[i].fi
+      }
+    }
+    this.getFac();
+  }
+
+  public getFac() {
+
+    for (let i = 0; i < this.frequencyData.length; i++) {
+
+      this.frequencyData[i].fiPercent = ((this.frequencyData[i].fi / this.sum) * 100).toFixed(2);
+
+      if (i == 0) {
+        this.frequencyData[i].fac = parseInt(this.frequencyData[i].fi)
+      } else if (i > 0) {
+        this.frequencyData[i].fac = parseInt(this.frequencyData[i].fi + this.frequencyData[i - 1].fac)
+      }
+    }
+
     let auxData = []
     let auxColor = []
 
@@ -301,7 +430,7 @@ export class DescritivaComponent implements OnInit {
       for (let i in this.frequencyData) {
         this.barChartLabels.push(this.frequencyData[i].num)
 
-        auxData.push(this.frequencyData[i].fi)
+        auxData.push(this.frequencyData[i].fiPercent)
 
         auxColor.push('rgb(79, 72, 157)')
       }
@@ -313,14 +442,14 @@ export class DescritivaComponent implements OnInit {
       ];
 
       this.barChartQuantDisc = [
-        { data: auxData, label: this.variable }
+        { data: auxData, label: `${this.variable} (%)` }
       ];
     } else if (this.selectedType < 3) {
 
       for (let i in this.frequencyData) {
         this.pieChartLabels.push(this.frequencyData[i].num)
 
-        auxData.push(this.frequencyData[i].fi)
+        auxData.push(this.frequencyData[i].fiPercent)
       }
 
       this.pieChartData = auxData;
@@ -356,9 +485,10 @@ export class DescritivaComponent implements OnInit {
       ];
 
     } else {
+
       for (let i in this.frequencyData) {
 
-        auxData.push(this.frequencyData[i].fi)
+        auxData.push(this.frequencyData[i].fiPercent)
 
         auxColor.push('rgb(79, 72, 157)')
 
@@ -371,66 +501,8 @@ export class DescritivaComponent implements OnInit {
       ];
 
       this.barChartQuantDisc1 = [
-        { data: auxData, label: this.variable, barPercentage: 1.25 }
+        { data: auxData, label: `${this.variable} (%)`, barPercentage: 1.25 }
       ];
-    }
-
-    this.calcFr(this.frequencyData);
-    this.show = true;
-  }
-
-  public calcIntervals(vals) {
-    let intervals = vals.slice(0).sort((a, b) => {
-      return parseInt(a || 0, 10) - parseInt(b || 0, 10);
-    });
-    let maxNum = intervals[intervals.length - 1];
-    let minNum = intervals[0];
-    let groupCount = Math.round(1 + 3.22 * Math.log10(intervals.length));
-    let groupLength = (maxNum - minNum) / groupCount;
-    groupLength = groupLength + 1;
-    //window.document.write(groupLength); 
-    let result = [], n = minNum;
-
-    for (let i = 0; i < groupCount; i++) {
-      result[i] = { min: Math.round(n), max: Math.round(Math.min(n + groupLength)) }
-      n += groupLength;
-    }
-    console.log(`INTERVALOS`)
-    console.log(result)
-    console.log('---------------------')
-    return result;
-  }
-
-  public calcFr(arr) {
-
-    if (this.selectedType == 1) {
-      this.frequencyData.sort(function (a, b) {
-        return a.fi < b.fi ? -1 : a.fi > b.fi ? 1 : 0;
-      });
-    }
-
-    this.sum = 0;
-    for (let i in arr) {
-      if (this.sum == 0) {
-        this.sum = arr[i].fi
-      } else {
-        this.sum = this.sum + arr[i].fi
-      }
-    }
-    this.getFac();
-  }
-
-  public getFac() {
-
-    for (let i = 0; i < this.frequencyData.length; i++) {
-
-      this.frequencyData[i].fiPercent = ((this.frequencyData[i].fi / this.sum) * 100).toFixed(2);
-
-      if (i == 0) {
-        this.frequencyData[i].fac = parseInt(this.frequencyData[i].fi)
-      } else if (i > 0) {
-        this.frequencyData[i].fac = parseInt(this.frequencyData[i].fi + this.frequencyData[i - 1].fac)
-      }
     }
 
     this.getFacPercent();
@@ -574,42 +646,61 @@ export class DescritivaComponent implements OnInit {
 
   public calcMedian() {
 
-    if (this.sortedVals.length % 2 === 0) {
+    if (this.selectedType < 4) {
 
-      let meio;
-      let meio1;
-      let meio2;
+      if (this.sortedVals.length % 2 === 0) {
 
-      if (this.selectedType != 4) {
-        meio = this.sortedVals.length / 2;
-        meio1 = this.sortedVals[meio - 1]
-        meio2 = this.sortedVals[meio];
+        let meio = this.sortedVals.length / 2;
+        let meio1 = this.sortedVals[meio - 1]
+        let meio2 = this.sortedVals[meio];
+
+        if (this.selectedType == 3) {
+          let aux = (meio1 + meio2) / 2
+          // let aux2 = parseFloat(aux.toString());
+          this.median = aux.toFixed(2);
+        } else {
+
+          this.median = meio1 + " e " + meio2
+        }
+
       } else {
-        meio = this.valAux.length / 2;
-        meio1 = this.valAux[meio - 1]
-        meio2 = this.valAux[meio];
+        let esq = 0;
+        let dir = this.sortedVals.length - 1;
+        let meio;
+        meio = (esq + dir) / 2;
+
+        if (this.selectedType == 3) {
+          this.median = parseFloat(this.sortedVals[meio]).toFixed(2);
+        } else {
+          this.median = this.sortedVals[meio];
+        }
       }
 
-
-      if (this.selectedType == 3 || this.selectedType == 4) {
-        let aux = (meio1 + meio2) / 2
-        // let aux2 = parseFloat(aux.toString());
-        this.median = aux.toFixed(2);
-      } else {
-
-        this.median = meio1 + " e " + meio2
-      }
     } else {
-      let esq = 0;
-      let dir = this.sortedVals.length - 1;
-      let meio;
-      meio = (esq + dir) / 2;
 
-      if (this.selectedType == 3 || this.selectedType == 4) {
-        this.median = parseFloat(this.sortedVals[meio]).toFixed(2);
+      let meio;
+
+      if (this.valAux.length % 2 === 0) {
+
+        meio = (this.valAux.length / 2) - 1;
+
       } else {
-        this.median = this.sortedVals[meio];
+
+        meio = (this.valAux.length - 1) / 2;
+
       }
+
+      let pos = meio + 1;
+
+      for (let i = 0; i < this.frequencyData.length; i++) {
+
+        if (this.valAux[meio] > this.frequencyData[i].min && this.valAux[meio] < this.frequencyData[i].max) {
+          let calcAux = (pos - this.frequencyData[i - 1].fac) / this.frequencyData[i].fi
+          let interval = this.frequencyData[i].max - this.frequencyData[i].min
+          this.median = this.frequencyData[i].min + (calcAux * interval)
+        }
+      }
+
     }
 
   }
