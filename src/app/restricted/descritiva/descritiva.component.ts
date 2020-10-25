@@ -136,6 +136,8 @@ export class DescritivaComponent implements OnInit {
   public variationCo = '0';
   public median = '0';
   public valAux;
+  public arrNum = [];
+  public arrFi = [];
 
   constructor(public dialog: MatDialog) { }
 
@@ -183,10 +185,10 @@ export class DescritivaComponent implements OnInit {
 
       // if (this.selectedType != 4) {
 
-        this.sortedVals = valores.sort((a,b) => a - b);
+      this.sortedVals = valores.sort((a, b) => a - b);
 
       // } else {
-        if (this.selectedType == 4) {
+      if (this.selectedType == 4) {
 
         // this.valAux = valores;
         // this.valAux = this.valAux.sort((a, b) => a - b);
@@ -239,14 +241,11 @@ export class DescritivaComponent implements OnInit {
       this.sortedVals = valores.sort()
     }
 
-    console.log(valores)
-
-    // valores = valores.map(s => s.trim());
     valores = valores.map(Function.prototype.call, String.prototype.trim)
 
     console.log(valores)
 
-    let obj = valores.reduce(function (object, item) {
+    let obj = valores.reduce((object, item) => {
 
       if (!object[item]) {
         object[item] = 1;
@@ -256,7 +255,13 @@ export class DescritivaComponent implements OnInit {
       return object;
     }, {})
 
-    console.log(obj)
+    this.arrNum = Object.keys(obj);
+    this.arrFi = Object.values(obj);
+
+    for (let i = 0; i < this.arrNum.length; i++) {
+      let objData = { num: this.arrNum[i], fi: this.arrFi[i] };
+      this.frequencyData.push(objData)
+    }
 
     // if (this.selectedType >= 3) {
     //   this.barChartLabels = Object.keys(obj);
@@ -345,29 +350,7 @@ export class DescritivaComponent implements OnInit {
 
     // console.log(obj)
 
-    let j = 1;
-    let aux = {}
-
-    for (let i = 0; i < this.sortedVals.length; i++) {
-
-      aux = {};
-      if (this.frequencyData.length == 0) {
-        aux = { num: this.sortedVals[i], fi: 1 }
-        this.frequencyData.push(aux);
-      } else {
-        if (this.sortedVals[i] == this.sortedVals[i - 1]) {
-          this.frequencyData[this.frequencyData.length - 1].fi = j;
-        } else {
-          aux = { num: this.sortedVals[i], fi: 1 }
-          this.frequencyData.push(aux);
-          j = 1;
-        }
-      }
-      j++;
-
-    }
-
-    this.calcFr(this.frequencyData);
+    this.getFiPercent();
     this.show = true;
   }
 
@@ -390,37 +373,19 @@ export class DescritivaComponent implements OnInit {
     return result;
   }
 
-  public calcFr(arr) {
+  public getFiPercent() {
 
-    if (this.selectedType == 1) {
-      this.frequencyData.sort(function (a, b) {
-        return a.fi < b.fi ? -1 : a.fi > b.fi ? 1 : 0;
-      });
-    }
+    let total = this.arrFi.reduce((a, b) => a + b);
 
-    this.sum = 0;
-    for (let i in arr) {
-      if (this.sum == 0) {
-        this.sum = arr[i].fi
-      } else {
-        this.sum = this.sum + arr[i].fi
-      }
-    }
-    this.getFac();
-  }
+    this.frequencyData.forEach(p => {
+      p.fiPercent = ((p.fi/total) * 100).toFixed(2);
+    })
 
-  public getFac() {
+    // for (let i = 0; i < this.frequencyData.length; i++) {
 
-    for (let i = 0; i < this.frequencyData.length; i++) {
+    //   this.frequencyData[i].fiPercent = ((this.frequencyData[i].fi / total) * 100).toFixed(2);
 
-      this.frequencyData[i].fiPercent = ((this.frequencyData[i].fi / this.sum) * 100).toFixed(2);
-
-      if (i == 0) {
-        this.frequencyData[i].fac = parseInt(this.frequencyData[i].fi)
-      } else if (i > 0) {
-        this.frequencyData[i].fac = parseInt(this.frequencyData[i].fi + this.frequencyData[i - 1].fac)
-      }
-    }
+    // }
 
     let auxData = []
     let auxColor = []
@@ -505,26 +470,29 @@ export class DescritivaComponent implements OnInit {
       ];
     }
 
-    this.getFacPercent();
+    this.getFac()
+
   }
 
-  public getFacPercent() {
-    for (let i = 0; i < this.frequencyData.length; i++) {
-      if (i == 0) {
-        this.frequencyData[i].facPercent = parseFloat(this.frequencyData[i].fiPercent).toFixed(2);
-      } else if (i > 0) {
-        this.frequencyData[i].facPercent = parseFloat(this.frequencyData[i].fiPercent) + parseFloat(this.frequencyData[i - 1].facPercent);
-        this.frequencyData[i].facPercent = parseFloat(this.frequencyData[i].facPercent).toFixed(2);
-      }
+  public getFac() {
+
+    this.frequencyData[0].fac = parseInt(this.frequencyData[0].fi)
+    this.frequencyData[0].facPercent = parseFloat(this.frequencyData[0].fiPercent).toFixed(2);
+
+    for (let i = 1; i < this.frequencyData.length; i++) {
+      this.frequencyData[i].fac = parseInt(this.frequencyData[i].fi + this.frequencyData[i - 1].fac)
+      this.frequencyData[i].facPercent = parseFloat(this.frequencyData[i].fiPercent) + parseFloat(this.frequencyData[i - 1].facPercent);
+      this.frequencyData[i].facPercent = parseFloat(this.frequencyData[i].facPercent).toFixed(2);
     }
 
-    this.frequencyData[this.frequencyData.length - 1].facPercent = parseFloat('100').toFixed(2);
+    let facTotal = parseInt(this.frequencyData[this.frequencyData.length - 1].facPercent);
+    if (facTotal == 99) {
+      this.frequencyData[this.frequencyData.length - 1].facPercent = parseFloat((facTotal + 1).toString()).toFixed();
+    } else {
+      this.frequencyData[this.frequencyData.length - 1].facPercent = parseFloat(facTotal.toString()).toFixed();
+    }
+
     this.getModa();
-    // if (this.selectedType == 3 || this.selectedType == 4) {
-    //   this.getAverage();
-    // } else {
-    //   this.getMode();
-    // }
   }
 
   public getModa() {
@@ -656,7 +624,6 @@ export class DescritivaComponent implements OnInit {
 
         if (this.selectedType == 3) {
           let aux = (meio1 + meio2) / 2
-          // let aux2 = parseFloat(aux.toString());
           this.median = aux.toFixed(2);
         } else {
 
