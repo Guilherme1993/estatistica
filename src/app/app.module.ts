@@ -31,6 +31,8 @@ import {MatRadioModule} from '@angular/material/radio';
 import {MatTableModule} from '@angular/material/table';
 
 import { ChartsModule } from 'ng2-charts';
+import { ProbabilidadeComponent } from './restricted/probabilidade/probabilidade.component';
+import { CorrelacaoComponent } from './restricted/correlacao/correlacao.component';
 
 @NgModule({
   declarations: [
@@ -42,6 +44,8 @@ import { ChartsModule } from 'ng2-charts';
     AuthenticationComponent,
     InsertComponent,
     UploadCsvComponent,
+    ProbabilidadeComponent,
+    CorrelacaoComponent,
   ],
   imports: [
     BrowserModule,

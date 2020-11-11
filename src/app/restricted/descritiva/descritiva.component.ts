@@ -174,7 +174,7 @@ export class DescritivaComponent implements OnInit {
 
     let valores;
 
-    if (this.selectedType >= 3) {
+    if (this.selectedType == 4) {
       valores = result.arr;
       if (!this.isCsv) {
         valores = valores.replace(/;\s/g, ';');
@@ -183,175 +183,162 @@ export class DescritivaComponent implements OnInit {
         valores = this.arr.trim().split(/\s*;\s*/).map(Number);
       }
 
-      // if (this.selectedType != 4) {
-
       this.sortedVals = valores.sort((a, b) => a - b);
 
-      // } else {
-      if (this.selectedType == 4) {
+      this.valAux = this.sortedVals;
 
-        // this.valAux = valores;
-        // this.valAux = this.valAux.sort((a, b) => a - b);
-        this.valAux = this.sortedVals;
+      this.getContinueValues();
 
-        let intervals = this.calcIntervals(valores);
+      // let intervals = this.calcIntervals(valores);
 
-        let tableInfo = intervals.map((interval) => {
-          let min = interval.min, max = interval.max;
+      // let tableInfo = intervals.map((interval) => {
+      //   let min = interval.min, max = interval.max;
 
-          return {
-            midPoint: (min + max) / 2,
-            frequency: valores.map((n) => {
-              return (n < max && n >= min) ? 1 : 0;
-            }).reduce((a, b) => {
-              return a + b;
-            })
-          };
-        });
+      //   return {
+      //     midPoint: (min + max) / 2,
+      //     frequency: valores.map((n) => {
+      //       return (n < max && n >= min) ? 1 : 0;
+      //     }).reduce((a, b) => {
+      //       return a + b;
+      //     })
+      //   };
+      // });
 
-        for (let i = 0; i < intervals.length; i++) {
-          let auxObj = <any>{};
-          if (tableInfo[i].frequency > 0) {
-            auxObj.min = intervals[i].min
-            auxObj.max = intervals[i].max
-            auxObj.midPoint = tableInfo[i].midPoint;
-            auxObj.fi = tableInfo[i].frequency;
-            this.frequencyData.push(auxObj);
-            // this.midPoints.push(tableInfo[i].midPoint * tableInfo[i].frequency)
-            this.midPoints.push(tableInfo[i].midPoint)
+      // for (let i = 0; i < intervals.length; i++) {
+      //   let auxObj = <any>{};
+      //   if (tableInfo[i].frequency > 0) {
+      //     auxObj.min = intervals[i].min
+      //     auxObj.max = intervals[i].max
+      //     auxObj.midPoint = tableInfo[i].midPoint;
+      //     auxObj.fi = tableInfo[i].frequency;
+      //     this.frequencyData.push(auxObj);
+      //     // this.midPoints.push(tableInfo[i].midPoint * tableInfo[i].frequency)
+      //     this.midPoints.push(tableInfo[i].midPoint)
 
-            this.barChartLabels1.push(`${auxObj.min} |----- ${auxObj.max}`)
-          }
-        }
-      }
-
-      // SOMA TOTAL
-      // this.totalSum = valores.reduce((a, b) => { return a + b });
-
-      // var novaArr = this.sortedVals.filter((este, i) => this.sortedVals.indexOf(este) === i);
+      //     this.barChartLabels1.push(`${auxObj.min} |----- ${auxObj.max}`)
+      //   }
+      // }
 
     } else {
-      valores = result.arr;
-      if (!this.isCsv) {
-        // valores = valores.replace(/;\s/g, ';');
-        valores = this.arr.split(";").map(String);
+
+      if (this.selectedType == 3) {
+
+        valores = result.arr;
+        if (!this.isCsv) {
+          valores = valores.replace(/;\s/g, ';');
+          valores = this.arr.trim().split(";").map(Number);
+        } else {
+          valores = this.arr.trim().split(/\s*;\s*/).map(Number);
+        }
+
+        this.sortedVals = valores.sort((a, b) => a - b);
+
       } else {
-        valores = this.arr.trim().split(/\s*;\s*/).map(String);
+
+        valores = result.arr;
+        if (!this.isCsv) {
+          // valores = valores.replace(/;\s/g, ';');
+          valores = this.arr.split(";").map(String);
+        } else {
+          valores = this.arr.trim().split(/\s*;\s*/).map(String);
+        }
+        this.sortedVals = valores.sort()
+
+        valores = valores.map(Function.prototype.call, String.prototype.trim)
+
       }
-      this.sortedVals = valores.sort()
-    }
 
-    valores = valores.map(Function.prototype.call, String.prototype.trim)
+      let obj = valores.reduce((object, item) => {
 
-    console.log(valores)
+        if (!object[item]) {
+          object[item] = 1;
+        } else {
+          object[item]++;
+        }
+        return object;
+      }, {})
 
-    let obj = valores.reduce((object, item) => {
+      this.arrNum = Object.keys(obj);
+      this.arrFi = Object.values(obj);
 
-      if (!object[item]) {
-        object[item] = 1;
-      } else {
-        object[item]++;
+      for (let i = 0; i < this.arrNum.length; i++) {
+        let objData = { num: this.arrNum[i], fi: this.arrFi[i] };
+        this.frequencyData.push(objData)
       }
-      return object;
-    }, {})
-
-    this.arrNum = Object.keys(obj);
-    this.arrFi = Object.values(obj);
-
-    for (let i = 0; i < this.arrNum.length; i++) {
-      let objData = { num: this.arrNum[i], fi: this.arrFi[i] };
-      this.frequencyData.push(objData)
     }
-
-    // if (this.selectedType >= 3) {
-    //   this.barChartLabels = Object.keys(obj);
-    //   let values = Object.values(obj);
-    //   this.barChartQuantDisc = [
-    //     { data: values, label: this.variable }
-    //   ];
-
-    //   for (let i = 0; i < values.length; i++) {
-    //     this.descritivaObj.name = this.barChartLabels[i];
-    //     // this.descritivaObj.fi = values[i]
-    //   }
-
-    // } else {
-
-    //   this.pieChartLabels = Object.keys(obj);
-    //   this.pieChartData = Object.values(obj);
-
-    // }
-
-    // if (this.selectedType >= 3) {
-    //   let valores = result.arr;
-    //   if (!this.isCsv) {
-    //     valores = valores.replace(/;\s/g, ';');
-    //     valores = this.arr.trim().split(";").map(Number);
-    //   } else {
-    //     valores = this.arr.trim().split(/\s*;\s*/).map(Number);
-    //   }
-
-    //   if (this.selectedType != 4) {
-    //     this.sortedVals = valores.slice(0).sort((a, b) => {
-    //       return parseInt(a || 0, 10) - parseInt(b || 0, 10);
-    //     });
-    //   } else {
-
-    //     // this.sortedVals = valores.sort((a, b) => a - b);
-    //     this.valAux = valores;
-    //     this.valAux = this.valAux.sort((a, b) => a - b);
-
-    //     let intervals = this.calcIntervals(valores);
-
-    //     let tableInfo = intervals.map((interval) => {
-    //       let min = interval.min, max = interval.max;
-
-    //       return {
-    //         midPoint: (min + max) / 2,
-    //         frequency: valores.map((n) => {
-    //           return (n < max && n >= min) ? 1 : 0;
-    //         }).reduce((a, b) => {
-    //           return a + b;
-    //         })
-    //       };
-    //     });
-
-    //     for (let i = 0; i < intervals.length; i++) {
-    //       let auxObj = <any>{};
-    //       if (tableInfo[i].frequency > 0) {
-    //         auxObj.min = intervals[i].min
-    //         auxObj.max = intervals[i].max
-    //         auxObj.midPoint = tableInfo[i].midPoint;
-    //         auxObj.fi = tableInfo[i].frequency;
-    //         this.frequencyData.push(auxObj);
-    //         // this.midPoints.push(tableInfo[i].midPoint * tableInfo[i].frequency)
-    //         this.midPoints.push(tableInfo[i].midPoint)
-
-    //         this.barChartLabels1.push(`${auxObj.min} |----- ${auxObj.max}`)
-    //       }
-    //     }
-    //   }
-
-    //   // SOMA TOTAL
-    //   // this.totalSum = valores.reduce((a, b) => { return a + b });
-
-    //   // var novaArr = this.sortedVals.filter((este, i) => this.sortedVals.indexOf(este) === i);
-
-    // } else {
-    //   let valores = result.arr;
-    //   if (!this.isCsv) {
-    //     // valores = valores.replace(/;\s/g, ';');
-    //     valores = this.arr.split(";").map(String);
-    //   } else {
-    //     valores = this.arr.trim().split(/\s*;\s*/).map(String);
-    //   }
-    //   this.sortedVals = valores.sort()
-    // }
-
-    // console.log(obj)
 
     this.getFiPercent();
     this.show = true;
+  }
+
+  private getContinueValues(){
+
+    console.log(this.sortedVals)
+
+    let min = this.sortedVals[0];
+    let max = this.sortedVals[this.sortedVals.length - 1]
+
+    console.log(min)
+    console.log(max)
+
+    let at = (max - min) + 1;
+
+    console.log(at)
+
+    let k = parseInt(Math.sqrt(this.sortedVals.length).toString())
+
+    let kValues = [k-1, k, k+1]
+
+    let kSelected;
+
+    console.log(kValues)
+
+    let classInterval;
+
+    let classValue = false;
+
+    while (!classValue){
+
+      if (at % kValues[0] == 0){
+
+        classInterval = at / kValues[0];
+
+        kSelected = kValues[0];
+
+        classValue = true;
+
+      } else if (at % kValues[1] == 0){
+
+        classInterval = at / kValues[1];
+
+        kSelected = kValues[1];
+
+        classValue = true;
+
+      } else if (at % kValues[2] == 0){
+
+        classInterval = at / kValues[2];
+
+        kSelected = kValues[2];
+
+        classValue = true;
+
+      } else {
+
+        at++;
+
+      } 
+    }
+
+    console.log(classInterval);
+
+    for (let i = 0; i < kSelected; i++){
+
+      
+
+    }
+
+    //montar objetos com esses dados
   }
 
   public calcIntervals(vals) {
@@ -378,14 +365,8 @@ export class DescritivaComponent implements OnInit {
     let total = this.arrFi.reduce((a, b) => a + b);
 
     this.frequencyData.forEach(p => {
-      p.fiPercent = ((p.fi/total) * 100).toFixed(2);
+      p.fiPercent = ((p.fi / total) * 100).toFixed(2);
     })
-
-    // for (let i = 0; i < this.frequencyData.length; i++) {
-
-    //   this.frequencyData[i].fiPercent = ((this.frequencyData[i].fi / total) * 100).toFixed(2);
-
-    // }
 
     let auxData = []
     let auxColor = []

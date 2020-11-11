@@ -1,0 +1,119 @@
+<mat-card style="margin: 10px;">
+
+  <div class="my-flex-line width-full" style="margin-bottom: 5px;">
+    <div class="ml-xs mr-xs " fxFlex>
+      <mat-card-title>Probabilidades</mat-card-title>
+      <mat-card-subtitle>Insira as informações necessárias para prosseguir</mat-card-subtitle>
+    </div>
+  </div>
+  <hr>
+
+  <mat-card-content>
+    <div class="my-flex-line width-full">
+      <div fxLayout="row">
+        <mat-form-field class="ml-xs mr-xs my-flex-column" style="margin-right: 10px; margin-top: 10px">
+          <mat-select placeholder="Selecione uma opção" [(ngModel)]="selectedType" #drinkControl="ngModel" (selectionChange)="clear()">
+            <mat-option *ngFor="let c of types" [value]="c.id">
+              {{ c.name }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+    </div>
+  </mat-card-content>
+
+  <mat-card-content *ngIf="selectedType != 0">
+    <div class="my-flex-line width-full" *ngIf="selectedType == 1">
+      <mat-form-field class="example-full-width" style="width: 15%; margin-top: 10px; margin-left: 10px">
+        <input matInput placeholder="Digite o valor de n" type="number" min="0" [(ngModel)]="valN">
+      </mat-form-field>
+      <mat-form-field class="example-full-width" style="width: 15%; margin-top: 10px; margin-left: 10px">
+        <input matInput placeholder="Digite o valor de p" type="number" min="0" [(ngModel)]="valP">
+      </mat-form-field>
+      <mat-form-field class="example-full-width" style="width: 15%; margin-top: 10px; margin-left: 10px">
+        <input matInput placeholder="Digite o valor de q" type="number" min="0" [(ngModel)]="valQ">
+      </mat-form-field>
+      <mat-form-field class="example-full-width" style="width: 15%; margin-top: 10px">
+        <input matInput placeholder="Digite o valor de k" type="number" min="0" [(ngModel)]="valK">
+      </mat-form-field>
+    </div>
+    <div *ngIf="selectedType == 2">
+      <div class="my-flex-line width-full" *ngIf="selectedType == 2">
+        <mat-form-field class="example-full-width" style="width: 15%; margin-top: 10px; margin-left: 10px">
+          <input matInput placeholder="Digite o valor da média" type="number" min="0" [(ngModel)]="valMedia">
+        </mat-form-field>
+        <mat-form-field class="example-full-width" style="width: 15%; margin-top: 10px; margin-left: 10px">
+          <input matInput placeholder="Digite o valor do DP" type="number" min="0" [(ngModel)]="valDP">
+        </mat-form-field>
+        <mat-form-field class="ml-xs mr-xs my-flex-column" style="margin-right: 10px; margin-top: 10px">
+          <mat-select placeholder="Condição Min." [(ngModel)]="condMin" #drinkControl="ngModel">
+            <mat-option *ngFor="let c of condicoes" [value]="c.id">
+              {{ c.name }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field class="example-full-width" style="width: 15%; margin-top: 10px; margin-left: 10px">
+          <input matInput placeholder="Digite o valor mínimo" type="number" min="0" [(ngModel)]="qMin">
+        </mat-form-field>
+        <mat-form-field class="ml-xs mr-xs my-flex-column" style="margin-right: 10px; margin-top: 10px">
+          <mat-select placeholder="Condição Max." [(ngModel)]="condMax" #drinkControl="ngModel">
+            <mat-option *ngFor="let c of condicoes" [value]="c.id">
+              {{ c.name }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field class="example-full-width" style="width: 15%; margin-top: 10px">
+          <input matInput placeholder="Digite o valor máximo" type="number" min="0" [(ngModel)]="qMax">
+        </mat-form-field>
+      </div>
+    </div>
+    <div *ngIf="selectedType == 3">
+      <div class="my-flex-line width-full" *ngIf="selectedType == 3">
+        <mat-form-field class="example-full-width" style="width: 15%; margin-top: 10px; margin-left: 10px">
+          <input matInput placeholder="Digite o valor min." type="number" min="0" [(ngModel)]="vMin">
+        </mat-form-field>
+        <mat-form-field class="example-full-width" style="width: 15%; margin-top: 10px; margin-left: 10px">
+          <input matInput placeholder="Digite o valor max." type="number" min="0" [(ngModel)]="vMax">
+        </mat-form-field>
+        <mat-form-field class="ml-xs mr-xs my-flex-column" style="margin-right: 10px; margin-top: 10px">
+          <mat-select placeholder="Condição" [(ngModel)]="condMin" #drinkControl="ngModel">
+            <mat-option *ngFor="let c of condicoes" [value]="c.id">
+              {{ c.name }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field class="example-full-width" style="width: 15%; margin-top: 10px; margin-left: 10px">
+          <input matInput placeholder="Digite o valor de q" type="number" min="0" [(ngModel)]="qMin">
+        </mat-form-field>
+        <!-- <mat-form-field class="ml-xs mr-xs my-flex-column" style="margin-right: 10px; margin-top: 10px">
+          <mat-select placeholder="Condição Max." [(ngModel)]="condMax" #drinkControl="ngModel">
+            <mat-option *ngFor="let c of condicoes" [value]="c.id">
+              {{ c.name }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field class="example-full-width" style="width: 15%; margin-top: 10px">
+          <input matInput placeholder="Digite o q máximo" type="number" min="0" [(ngModel)]="qMax">
+        </mat-form-field> -->
+      </div>
+    </div>
+
+    <div fxLayout="row" fxLayoutAlign="end center">
+      <button mat-raised-button color="primary" class="mr-1 mb-1" (click)="calcular()"
+        style="margin-top: 10px;">Calcular</button>
+    </div>
+  </mat-card-content>
+
+</mat-card>
+
+<mat-card *ngIf="showRes">
+  <mat-card-content>
+    <div fxLayout="column" style="margin: 20px">
+      <span style="margin: 5px"><strong>Probabilidade:</strong>&nbsp;<i>{{valProbabilidade}}%</i></span>
+      <span style="margin: 5px"><strong>Média:</strong>&nbsp; <i>{{valMedia}}</i></span>
+      <span style="margin: 5px"><strong>Desvio Padrão:</strong>&nbsp;<i>{{valDP}}</i></span>
+      <span style="margin: 5px"><strong>Coeficiente de Variação:</strong>&nbsp; <i>{{valCV}}%</i></span>
+      <!-- <span style="margin: 5px" *ngIf="selectedType == 3"><strong>Intervalo:</strong>&nbsp; <i>{{intervalo}}</i></span> -->
+    </div>
+  </mat-card-content>
+</mat-card>

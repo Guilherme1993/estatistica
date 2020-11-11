@@ -7,6 +7,7 @@ import { HomeComponent } from './layout/home/home.component';
 import { DescritivaComponent } from './restricted/descritiva/descritiva.component';
 import { CreateAccountComponent } from './account/create-account/create-account.component';
 import { LoginComponent } from './account/login/login.component';
+import { ProbabilidadeComponent } from './restricted/probabilidade/probabilidade.component';
 
 export const AppRoutes: Routes = [{
     path: '',
@@ -20,6 +21,9 @@ export const AppRoutes: Routes = [{
     {
         path: 'estatistica-descritiva',
         component: DescritivaComponent
+    }, {
+        path: 'probabilidade',
+        component: ProbabilidadeComponent
     }]
 }, {
     path: '',
