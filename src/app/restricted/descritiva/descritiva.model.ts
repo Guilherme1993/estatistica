@@ -1,5 +1,5 @@
 export interface Descritiva{
-    name: string;
+    num: string;
     fi: number;
     fiPercent: number;
     fac: number;

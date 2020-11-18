@@ -6,7 +6,7 @@
 
 <mat-dialog-content class="mat-typography" style="text-align: center;">
 
-    <mat-horizontal-stepper [linear]="isLinear" [selectedIndex]="selectedIndex" #stepper (selectionChange)="processData($event)">
+    <mat-horizontal-stepper [linear]="isLinear" [selectedIndex]="selectedIndex" #stepper>
 
         <mat-step [stepControl]="firstFormGroup">
             <form [formGroup]="firstFormGroup">
@@ -60,7 +60,7 @@
                     </div>
                 </div>
                 <ng-template #elseBlock>
-                    <app-upload-csv #appUploadCsv></app-upload-csv>
+                    <app-upload-csv (csvOutPut)="csv($event)"></app-upload-csv>
                 </ng-template>
 
             </form>

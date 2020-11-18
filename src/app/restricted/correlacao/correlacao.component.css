@@ -1,0 +1,39 @@
+table{
+    width: 80%;
+    margin-left: auto;
+    margin-right: auto;
+   }
+   
+   .mat-column-x {
+     text-align: center;
+     width: 15%;
+    }
+   
+   .mat-column-y {
+     text-align: center;
+     width: 15%;
+   }
+   
+   .mat-column-xy {
+     text-align: center;
+     width: 15%;
+   }
+   
+   .mat-column-x2 {
+     text-align: center;
+     width: 15%;
+   }
+   
+   .mat-column-y2 {
+     text-align: center;
+     width: 15%;
+   }
+  
+   tr.mat-footer-row {
+    font-weight: bold;
+    
+  }
+  
+  .mat-table-sticky {
+    border-top: 1px solid #e0e0e0;
+  }

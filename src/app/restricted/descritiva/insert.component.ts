@@ -59,20 +59,18 @@ export class InsertComponent implements OnInit {
         console.log(this.arr)
     }
 
-    @HostListener('click', ['$event'])
-    onClick(event) {
+    // @HostListener('click', ['$event'])
+    // onClick(event) {
 
-        if (event.target.id == 'btnSubmit') {
+    //     if (event.target.id == 'btnSubmit') {
 
-            console.log('deu certo aqui!')
+    //         this.arr = this.appUploadCsv.arr;
 
-            this.arr = this.appUploadCsv.arr;
+    //         this.isCsv = true;
 
-            this.isCsv = true;
+    //     }
 
-        }
-
-    }
+    // }
 
     public closeModal() {
         this.dialogRef.close(true);
@@ -97,13 +95,43 @@ export class InsertComponent implements OnInit {
         this.inputWay = item;
     }
 
-    public processData(event: any): void {
-        if (event.selectedIndex == 2) {
-            // this.arr = this.arr.trim().split(';')
-        }
-    }
+    // public processData(event: any): void {
+    //     if (event.selectedIndex == 2) {
+    //         // this.arr = this.arr.trim().split(';')
+    //     }
+    // }
 
     public calc() {
+
+        if (this.variableName == undefined || this.variableName.trim() == '') {
+            this.openSnackBar('É necessário inserir um nome para a variável', 'Atenção');
+            return null;
+        }
+
+        if (this.arr == undefined || this.arr.trim() == '') {
+            this.openSnackBar('É necessário inserir os valores para cálculo', 'Atenção');
+            return null;
+        }
+
+        if (this.varType == undefined || this.varType == 0) {
+            this.openSnackBar('É necessário selecionar o tipo de variável a ser calculada', 'Atenção');
+            return null;
+        }
+
+        if (this.measureType == undefined || this.measureType.trim() == '') {
+            this.openSnackBar('É necessário informar o conjunto analisado', 'Atenção');
+            return null;
+        }
+
+        if (this.selectedMeasure == undefined || this.selectedMeasure == 0) {
+            this.openSnackBar('É necessário selecionar uma medida separatriz', 'Atenção');
+            return null;
+        }
+
+        if (this.selectedMeasureValue == undefined || this.selectedMeasureValue == 0) {
+            this.openSnackBar('É necessário selecionar o valor da medida separatriz', 'Atenção');
+            return null;
+        }
 
         let result = {
             varName: this.variableName,
@@ -116,5 +144,13 @@ export class InsertComponent implements OnInit {
         }
 
         this.dialogRef.close(result);
+    }
+
+    public csv(event) {
+        this.arr = event.arr;
+        let auxArr = event.arr.trim().split('\n')
+        this.variableName = auxArr[0]
+        this.selectedIndex = 2
+        this.isCsv = true;
     }
 }

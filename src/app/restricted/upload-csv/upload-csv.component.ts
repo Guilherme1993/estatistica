@@ -1,4 +1,4 @@
-import { Component, OnInit, Inject, Input } from '@angular/core';
+import { Component, OnInit, Inject, Input, Output, EventEmitter } from '@angular/core';
 import { Documents } from './documents.model';
 import { MatSnackBar } from '@angular/material';
 
@@ -10,6 +10,9 @@ import { MatSnackBar } from '@angular/material';
 export class UploadCsvComponent implements OnInit {
 
   @Input() accept = '.csv';
+
+  @Output() csvOutPut = new EventEmitter();
+
   public files: Array<Documents> = [];
   public imageCheck = false;
   public documentUpload = false;
@@ -33,15 +36,12 @@ export class UploadCsvComponent implements OnInit {
   public async changeListener(files: FileList){
     if(files && files.length > 0) {
        let file : File = files.item(0);
-       console.log(file)
        this.varName = file.name;
-       console.log(this.varName)
          let reader: FileReader = new FileReader();
          reader.readAsText(file);
          reader.onload = (e) => {
             let csv: string = reader.result as string;
             this.arr = csv;
-            console.log(this.arr)
             this.result();
          } 
       }
@@ -52,7 +52,9 @@ export class UploadCsvComponent implements OnInit {
   }
 
   private result(){
-    console.log('última mensagem')
+    this.csvOutPut.emit({
+      arr: this.arr
+    })
   }
 
 }

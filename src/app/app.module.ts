@@ -65,7 +65,7 @@ import { CorrelacaoComponent } from './restricted/correlacao/correlacao.componen
     MatSelectModule,
     MatRadioModule,
     MatTableModule,
-    ChartsModule
+    ChartsModule,
   ],
   providers: [],
   bootstrap: [AppComponent],

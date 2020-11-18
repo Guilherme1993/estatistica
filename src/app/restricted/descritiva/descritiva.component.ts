@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { InsertComponent } from './insert.component';
-import { MatDialog, MatSnackBar } from '@angular/material';
+import { MatDialog, MatSnackBar, MatTableDataSource } from '@angular/material';
 import { ChartOptions, ChartType, ChartDataSets, Chart } from 'chart.js';
 import { Label } from 'ng2-charts';
 import * as pluginDataLabels from 'chartjs-plugin-datalabels';
@@ -139,6 +139,8 @@ export class DescritivaComponent implements OnInit {
   public arrNum = [];
   public arrFi = [];
 
+  public dataSource = new MatTableDataSource();
+
   constructor(public dialog: MatDialog) { }
 
   ngOnInit() {
@@ -156,7 +158,6 @@ export class DescritivaComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      console.log(result);
       this.mountTable(result);
     });
 
@@ -180,7 +181,8 @@ export class DescritivaComponent implements OnInit {
         valores = valores.replace(/;\s/g, ';');
         valores = this.arr.trim().split(";").map(Number);
       } else {
-        valores = this.arr.trim().split(/\s*;\s*/).map(Number);
+        valores = this.arr.trim().split('\n').map(Number);
+        valores.shift();
       }
 
       this.sortedVals = valores.sort((a, b) => a - b);
@@ -188,36 +190,6 @@ export class DescritivaComponent implements OnInit {
       this.valAux = this.sortedVals;
 
       this.getContinueValues();
-
-      // let intervals = this.calcIntervals(valores);
-
-      // let tableInfo = intervals.map((interval) => {
-      //   let min = interval.min, max = interval.max;
-
-      //   return {
-      //     midPoint: (min + max) / 2,
-      //     frequency: valores.map((n) => {
-      //       return (n < max && n >= min) ? 1 : 0;
-      //     }).reduce((a, b) => {
-      //       return a + b;
-      //     })
-      //   };
-      // });
-
-      // for (let i = 0; i < intervals.length; i++) {
-      //   let auxObj = <any>{};
-      //   if (tableInfo[i].frequency > 0) {
-      //     auxObj.min = intervals[i].min
-      //     auxObj.max = intervals[i].max
-      //     auxObj.midPoint = tableInfo[i].midPoint;
-      //     auxObj.fi = tableInfo[i].frequency;
-      //     this.frequencyData.push(auxObj);
-      //     // this.midPoints.push(tableInfo[i].midPoint * tableInfo[i].frequency)
-      //     this.midPoints.push(tableInfo[i].midPoint)
-
-      //     this.barChartLabels1.push(`${auxObj.min} |----- ${auxObj.max}`)
-      //   }
-      // }
 
     } else {
 
@@ -228,7 +200,8 @@ export class DescritivaComponent implements OnInit {
           valores = valores.replace(/;\s/g, ';');
           valores = this.arr.trim().split(";").map(Number);
         } else {
-          valores = this.arr.trim().split(/\s*;\s*/).map(Number);
+          valores = this.arr.trim().split('\n').map(Number);
+          valores.shift();
         }
 
         this.sortedVals = valores.sort((a, b) => a - b);
@@ -237,10 +210,10 @@ export class DescritivaComponent implements OnInit {
 
         valores = result.arr;
         if (!this.isCsv) {
-          // valores = valores.replace(/;\s/g, ';');
           valores = this.arr.split(";").map(String);
         } else {
-          valores = this.arr.trim().split(/\s*;\s*/).map(String);
+          valores = this.arr.trim().split('\n').map(String);
+          valores.shift();
         }
         this.sortedVals = valores.sort()
 
@@ -271,35 +244,26 @@ export class DescritivaComponent implements OnInit {
     this.show = true;
   }
 
-  private getContinueValues(){
-
-    console.log(this.sortedVals)
+  private getContinueValues() {
 
     let min = this.sortedVals[0];
     let max = this.sortedVals[this.sortedVals.length - 1]
 
-    console.log(min)
-    console.log(max)
-
     let at = (max - min) + 1;
-
-    console.log(at)
 
     let k = parseInt(Math.sqrt(this.sortedVals.length).toString())
 
-    let kValues = [k-1, k, k+1]
+    let kValues = [k - 1, k, k + 1]
 
     let kSelected;
-
-    console.log(kValues)
 
     let classInterval;
 
     let classValue = false;
 
-    while (!classValue){
+    while (!classValue) {
 
-      if (at % kValues[0] == 0){
+      if (at % kValues[0] == 0) {
 
         classInterval = at / kValues[0];
 
@@ -307,7 +271,7 @@ export class DescritivaComponent implements OnInit {
 
         classValue = true;
 
-      } else if (at % kValues[1] == 0){
+      } else if (at % kValues[1] == 0) {
 
         classInterval = at / kValues[1];
 
@@ -315,7 +279,7 @@ export class DescritivaComponent implements OnInit {
 
         classValue = true;
 
-      } else if (at % kValues[2] == 0){
+      } else if (at % kValues[2] == 0) {
 
         classInterval = at / kValues[2];
 
@@ -327,37 +291,50 @@ export class DescritivaComponent implements OnInit {
 
         at++;
 
-      } 
+      }
     }
 
-    console.log(classInterval);
+    let i = min;
 
-    for (let i = 0; i < kSelected; i++){
+    let valores = this.sortedVals;
 
-      
+    while (i <= max) {
+      let valMax = i + classInterval;
+      let midPoints = (i + valMax) / 2;
 
+      let obj = { min: i, max: valMax, midPoints: midPoints }
+      this.frequencyData.push(obj);
+
+      this.midPoints.push(midPoints)
+
+      i += classInterval;
     }
 
-    //montar objetos com esses dados
+    this.calcContinueFrequency(valores);
+
   }
 
-  public calcIntervals(vals) {
-    let intervals = vals.slice(0).sort((a, b) => {
-      return parseInt(a || 0, 10) - parseInt(b || 0, 10);
-    });
-    let maxNum = intervals[intervals.length - 1];
-    let minNum = intervals[0];
-    let groupCount = Math.round(1 + 3.22 * Math.log10(intervals.length));
-    let groupLength = (maxNum - minNum) / groupCount;
-    groupLength = groupLength + 1;
-    //window.document.write(groupLength); 
-    let result = [], n = minNum;
+  public calcContinueFrequency(valores) {
 
-    for (let i = 0; i < groupCount; i++) {
-      result[i] = { min: Math.round(n), max: Math.round(Math.min(n + groupLength)) }
-      n += groupLength;
+    let frequencies = this.frequencyData.map((interval) => {
+      let min = interval.min, max = interval.max;
+
+      return {
+        frequency: valores.map((n) => {
+          return (n < max && n >= min) ? 1 : 0;
+        }).reduce((a, b) => {
+          return a + b;
+        })
+      };
+    });
+
+    for (let i = 0; i < this.frequencyData.length; i++) {
+      this.frequencyData[i].fi = frequencies[i].frequency;
+      this.arrFi.push(frequencies[i].frequency)
+
+      this.barChartLabels1.push(`${this.frequencyData[i].min} |----- ${this.frequencyData[i].max}`)
     }
-    return result;
+
   }
 
   public getFiPercent() {
@@ -473,6 +450,12 @@ export class DescritivaComponent implements OnInit {
       this.frequencyData[this.frequencyData.length - 1].facPercent = parseFloat(facTotal.toString()).toFixed();
     }
 
+    if (this.selectedType == 1) {
+      this.dataSource.connect();
+      this.dataSource.data = this.frequencyData;
+      this.dataSource.disconnect();
+    }
+
     this.getModa();
   }
 
@@ -518,7 +501,7 @@ export class DescritivaComponent implements OnInit {
     }
     else if (this.selectedType == 4) {
       for (let i = 0; i < this.frequencyData.length; i++) {
-        soma += (this.frequencyData[i].fi) * (this.frequencyData[i].midPoint)
+        soma += (this.frequencyData[i].fi) * (this.frequencyData[i].midPoints)
       }
 
       this.media = soma / this.frequencyData[freqTotal].fac
@@ -651,6 +634,28 @@ export class DescritivaComponent implements OnInit {
 
     }
 
+  }
+
+  public sortTable(element) {
+
+    let index;
+
+    for (let i = 0; i < this.frequencyData.length; i++) {
+      if (element.num == this.frequencyData[i].num) {
+        index = i;
+        break;
+      }
+    }
+
+    this.dataSource.connect();
+    let data = this.dataSource.data;
+    if (data.length > 1 && index > 0) {
+      [data[index], data[index - 1]] = [data[index - 1], data[index]]
+    }
+    this.dataSource.data = data;
+    this.dataSource.disconnect();
+
+    this.getFac();
   }
 
   public clean() {

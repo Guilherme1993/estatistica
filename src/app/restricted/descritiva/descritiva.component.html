@@ -18,7 +18,47 @@
 
 <mat-card *ngIf="show">
   <mat-card-content>
-    <div class="example-container" *ngIf="selectedType != 4">
+    <div class="example-container" *ngIf="selectedType == 1">
+      <table mat-table [dataSource]="dataSource">
+
+        <ng-container matColumnDef="ordination">
+          <th mat-header-cell *matHeaderCellDef> # </th>
+          <td mat-cell *matCellDef="let c"> <mat-icon aria-hidden="false" (click)="sortTable(c)">keyboard_arrow_up</mat-icon> </td>
+        </ng-container>
+
+        <ng-container matColumnDef="num">
+          <th mat-header-cell *matHeaderCellDef> {{variable}} </th>
+          <td mat-cell *matCellDef="let c"> {{c.num}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="fi">
+          <th mat-header-cell *matHeaderCellDef> Frequência (fi) </th>
+          <td mat-cell *matCellDef="let c"> {{c.fi}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="fi_percent">
+          <th mat-header-cell *matHeaderCellDef> Frequência Relativa Percentual (fr %) </th>
+          <td mat-cell *matCellDef="let c"> {{c.fiPercent}}% </td>
+        </ng-container>
+
+        <ng-container matColumnDef="fac">
+          <th mat-header-cell *matHeaderCellDef> Frequência Acumulada (Fac) </th>
+          <td mat-cell *matCellDef="let c"> {{c.fac}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="fac_percent">
+          <th mat-header-cell *matHeaderCellDef> Fac Percentual </th>
+          <td mat-cell *matCellDef="let c"> {{c.facPercent}}% </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="['ordination','num','fi', 'fi_percent', 'fac', 'fac_percent']; sticky: true">
+        </tr>
+        <tr mat-row *matRowDef="let row; columns: ['ordination','num','fi', 'fi_percent', 'fac', 'fac_percent'];">
+        </tr>
+      </table>
+    </div>
+
+    <div class="example-container" *ngIf="selectedType == 2 || selectedType == 3">
       <table mat-table [dataSource]="frequencyData">
 
 
