@@ -29,10 +29,15 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 import {MatSelectModule} from '@angular/material/select';
 import {MatRadioModule} from '@angular/material/radio';
 import {MatTableModule} from '@angular/material/table';
+import {MatSidenavModule} from '@angular/material/sidenav';
+import {MatListModule} from '@angular/material/list';
+import { MatToolbarModule } from '@angular/material/toolbar';
 
 import { ChartsModule } from 'ng2-charts';
 import { ProbabilidadeComponent } from './restricted/probabilidade/probabilidade.component';
 import { CorrelacaoComponent } from './restricted/correlacao/correlacao.component';
+import { HeaderComponent } from './navigation/header/header.component';
+import { SidenavListComponent } from './navigation/sidenav-list/sidenav-list.component';
 
 @NgModule({
   declarations: [
@@ -46,6 +51,8 @@ import { CorrelacaoComponent } from './restricted/correlacao/correlacao.componen
     UploadCsvComponent,
     ProbabilidadeComponent,
     CorrelacaoComponent,
+    HeaderComponent,
+    SidenavListComponent,
   ],
   imports: [
     BrowserModule,
@@ -66,6 +73,15 @@ import { CorrelacaoComponent } from './restricted/correlacao/correlacao.componen
     MatRadioModule,
     MatTableModule,
     ChartsModule,
+    MatSidenavModule,
+    MatListModule,
+    MatToolbarModule
+  ],
+  exports: [
+    MatButtonModule,
+    MatIconModule,
+    MatToolbarModule,
+    MatListModule
   ],
   providers: [],
   bootstrap: [AppComponent],
