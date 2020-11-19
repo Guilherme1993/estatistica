@@ -49,7 +49,7 @@ export class DescritivaComponent implements OnInit {
   };
   //FIM BARRAS
 
-  //BARRAS
+  //BARRAS - CONTÍNUA
   public barChartLabels1: any[] = [];
 
   public barChartType1: ChartType = 'bar';
@@ -121,8 +121,6 @@ export class DescritivaComponent implements OnInit {
   public frequencyData = [];
   public show = false;
   public variable = '';
-  public sum = 0;
-  public descritivaObj = <Descritiva>{};
   public isCsv = false;
   public arr;
 
@@ -150,7 +148,7 @@ export class DescritivaComponent implements OnInit {
 
     this.clean();
 
-    const dialogRef = this.dialog.open(InsertComponent, {
+    const dialogRef = this.dialog.open(InsertComponent, { //abre o stepper para inserção dos dados
       width: '90%',
       maxHeight: '500px',
       data: {
@@ -175,14 +173,14 @@ export class DescritivaComponent implements OnInit {
 
     let valores;
 
-    if (this.selectedType == 4) {
+    if (this.selectedType == 4) { // contínua - retorna valores do tipo number em um vetor
       valores = result.arr;
       if (!this.isCsv) {
         valores = valores.replace(/;\s/g, ';');
         valores = this.arr.trim().split(";").map(Number);
       } else {
         valores = this.arr.trim().split('\n').map(Number);
-        valores.shift();
+        valores.shift(); //caso for csv, remove a primeira linha que corresponde ao nome da variável
       }
 
       this.sortedVals = valores.sort((a, b) => a - b);
@@ -193,7 +191,7 @@ export class DescritivaComponent implements OnInit {
 
     } else {
 
-      if (this.selectedType == 3) {
+      if (this.selectedType == 3) { // discreta - retorna valores do tipo number em um vetor
 
         valores = result.arr;
         if (!this.isCsv) {
@@ -206,7 +204,7 @@ export class DescritivaComponent implements OnInit {
 
         this.sortedVals = valores.sort((a, b) => a - b);
 
-      } else {
+      } else { //// qualitativa - retorna valores do tipo string em um vetor
 
         valores = result.arr;
         if (!this.isCsv) {
@@ -217,11 +215,11 @@ export class DescritivaComponent implements OnInit {
         }
         this.sortedVals = valores.sort()
 
-        valores = valores.map(Function.prototype.call, String.prototype.trim)
+        valores = valores.map(Function.prototype.call, String.prototype.trim) //remove os espaços em branco no início e final de cada valor
 
       }
 
-      let obj = valores.reduce((object, item) => {
+      let obj = valores.reduce((object, item) => { //encontra a frequência de cada valor
 
         if (!object[item]) {
           object[item] = 1;
@@ -244,7 +242,7 @@ export class DescritivaComponent implements OnInit {
     this.show = true;
   }
 
-  private getContinueValues() {
+  private getContinueValues() { //calcula os valores da quantitativa contínua
 
     let min = this.sortedVals[0];
     let max = this.sortedVals[this.sortedVals.length - 1]
@@ -261,7 +259,7 @@ export class DescritivaComponent implements OnInit {
 
     let classValue = false;
 
-    while (!classValue) {
+    while (!classValue) { //encontra o menor valor de k divisível para at - intervalo de classe
 
       if (at % kValues[0] == 0) {
 
@@ -298,7 +296,7 @@ export class DescritivaComponent implements OnInit {
 
     let valores = this.sortedVals;
 
-    while (i <= max) {
+    while (i <= max) { // cria os objetos da contínua com valor mínimo, máximo e ponto médio
       let valMax = i + classInterval;
       let midPoints = (i + valMax) / 2;
 
@@ -314,7 +312,7 @@ export class DescritivaComponent implements OnInit {
 
   }
 
-  public calcContinueFrequency(valores) {
+  public calcContinueFrequency(valores) { //calcula a frequência para os valores da contínua
 
     let frequencies = this.frequencyData.map((interval) => {
       let min = interval.min, max = interval.max;
@@ -329,15 +327,15 @@ export class DescritivaComponent implements OnInit {
     });
 
     for (let i = 0; i < this.frequencyData.length; i++) {
-      this.frequencyData[i].fi = frequencies[i].frequency;
-      this.arrFi.push(frequencies[i].frequency)
+      this.frequencyData[i].fi = frequencies[i].frequency; // insere as frequências para cada objeto do vetor
+      this.arrFi.push(frequencies[i].frequency) //adiciona os dados da frequência no eixo y do gráfico da contínua
 
-      this.barChartLabels1.push(`${this.frequencyData[i].min} |----- ${this.frequencyData[i].max}`)
+      this.barChartLabels1.push(`${this.frequencyData[i].min} |----- ${this.frequencyData[i].max}`) //adiciona os valores de ponto mínimo e máximo no eixo x do gráfico da contínua
     }
 
   }
 
-  public getFiPercent() {
+  public getFiPercent() { // calcula porcentagem da frequência
 
     let total = this.arrFi.reduce((a, b) => a + b);
 
@@ -350,7 +348,7 @@ export class DescritivaComponent implements OnInit {
 
     if (this.selectedType == 3) {
 
-      for (let i in this.frequencyData) {
+      for (let i in this.frequencyData) { //adiciona os valores referentes ao gráfico da discreta - barras
         this.barChartLabels.push(this.frequencyData[i].num)
 
         auxData.push(this.frequencyData[i].fiPercent)
@@ -367,7 +365,7 @@ export class DescritivaComponent implements OnInit {
       this.barChartQuantDisc = [
         { data: auxData, label: `${this.variable} (%)` }
       ];
-    } else if (this.selectedType < 3) {
+    } else if (this.selectedType < 3) { //adiciona os valores referentes ao gráfico da qualitativa - pizza
 
       for (let i in this.frequencyData) {
         this.pieChartLabels.push(this.frequencyData[i].num)
@@ -377,7 +375,7 @@ export class DescritivaComponent implements OnInit {
 
       this.pieChartData = auxData;
 
-      switch (this.frequencyData.length) {
+      switch (this.frequencyData.length) { //define a cor para cada seção do gráfico de pizzas, dependendo da quantidade de dados distintos
         case 1:
           auxColor = ['rgba(255,0,0,0.3)']
           break;
@@ -438,19 +436,19 @@ export class DescritivaComponent implements OnInit {
     this.frequencyData[0].facPercent = parseFloat(this.frequencyData[0].fiPercent).toFixed(2);
 
     for (let i = 1; i < this.frequencyData.length; i++) {
-      this.frequencyData[i].fac = parseInt(this.frequencyData[i].fi + this.frequencyData[i - 1].fac)
-      this.frequencyData[i].facPercent = parseFloat(this.frequencyData[i].fiPercent) + parseFloat(this.frequencyData[i - 1].facPercent);
+      this.frequencyData[i].fac = parseInt(this.frequencyData[i].fi + this.frequencyData[i - 1].fac) //calcula a frequência relativa dos dados
+      this.frequencyData[i].facPercent = parseFloat(this.frequencyData[i].fiPercent) + parseFloat(this.frequencyData[i - 1].facPercent); //calcula a frequência relativa percentual dos dados
       this.frequencyData[i].facPercent = parseFloat(this.frequencyData[i].facPercent).toFixed(2);
     }
 
     let facTotal = parseInt(this.frequencyData[this.frequencyData.length - 1].facPercent);
-    if (facTotal == 99) {
+    if (facTotal == 99) { //arredonda o último valor da frequência percentual para 100%
       this.frequencyData[this.frequencyData.length - 1].facPercent = parseFloat((facTotal + 1).toString()).toFixed();
     } else {
       this.frequencyData[this.frequencyData.length - 1].facPercent = parseFloat(facTotal.toString()).toFixed();
     }
 
-    if (this.selectedType == 1) {
+    if (this.selectedType == 1) { // na qualitativa ordinal, reordena os valores na tabela
       this.dataSource.connect();
       this.dataSource.data = this.frequencyData;
       this.dataSource.disconnect();
@@ -484,11 +482,11 @@ export class DescritivaComponent implements OnInit {
         }
     }
 
-    this.calcularMedia();
+    this.calcMedia();
   }
 
 
-  public calcularMedia() {
+  public calcMedia() { // calcula a média
     let soma = 0;
     let freqTotal = this.frequencyData.length - 1
 
@@ -510,7 +508,7 @@ export class DescritivaComponent implements OnInit {
 
   }
 
-  public desvioPad() {
+  public desvioPad() { //calcula o desvio padrão
 
     let media = this.media
     let frequenciaTotal = this.frequencyData[this.frequencyData.length - 1].fac
@@ -537,18 +535,18 @@ export class DescritivaComponent implements OnInit {
 
     }
 
-    let variacao = (Number(this.desvioPadrao) / media) * 100
+    let variacao = (Number(this.desvioPadrao) / media) * 100 //calcula o coeficiente de variação
 
     this.variationCo = parseFloat(variacao.toString()).toFixed(2);
 
     this.calcSeparatingMeasures();
   }
 
-  public calcSeparatingMeasures() {
+  public calcSeparatingMeasures() { //medidas separatrizes
 
     let valorPorcentagem = 0;
 
-    switch (this.selectedMeasure) {
+    switch (this.selectedMeasure) { //define o valor da porcentagem dependendo da medida escolhida (quartil, quintil, decil e centil)
       case 4:
         valorPorcentagem = this.selectedMeasureValue * 25;
         break;
@@ -576,11 +574,11 @@ export class DescritivaComponent implements OnInit {
 
   }
 
-  public calcMedian() {
+  public calcMedian() { //cálculo da mediana
 
     if (this.selectedType < 4) {
 
-      if (this.sortedVals.length % 2 === 0) {
+      if (this.sortedVals.length % 2 === 0) { //se a quantidade de elementos for par, pega os dois valores centrais
 
         let meio = this.sortedVals.length / 2;
         let meio1 = this.sortedVals[meio - 1]
@@ -594,7 +592,7 @@ export class DescritivaComponent implements OnInit {
           this.median = meio1 + " e " + meio2
         }
 
-      } else {
+      } else { //se a quantidade de elementos for ímpar, pega o valor central
         let esq = 0;
         let dir = this.sortedVals.length - 1;
         let meio;
@@ -623,7 +621,7 @@ export class DescritivaComponent implements OnInit {
 
       let pos = meio + 1;
 
-      for (let i = 0; i < this.frequencyData.length; i++) {
+      for (let i = 0; i < this.frequencyData.length; i++) { //na quantitativa contínua, o cálculo é feito a partir dos pontos mínimo e máximo do elemento central
 
         if (this.valAux[meio] > this.frequencyData[i].min && this.valAux[meio] < this.frequencyData[i].max) {
           let calcAux = (pos - this.frequencyData[i - 1].fac) / this.frequencyData[i].fi
@@ -636,21 +634,21 @@ export class DescritivaComponent implements OnInit {
 
   }
 
-  public sortTable(element) {
+  public sortTable(element) { // ordenação da tabela - qualitativa ordinal
 
     let index;
 
-    for (let i = 0; i < this.frequencyData.length; i++) {
+    for (let i = 0; i < this.frequencyData.length; i++) { //encontra o índice do elemento a ser realocado
       if (element.num == this.frequencyData[i].num) {
         index = i;
         break;
       }
     }
 
-    this.dataSource.connect();
-    let data = this.dataSource.data;
+    this.dataSource.connect(); // "ativa" a tabela
+    let data = this.dataSource.data; //variável auxiliar que recebe os valores atuais da tabela
     if (data.length > 1 && index > 0) {
-      [data[index], data[index - 1]] = [data[index - 1], data[index]]
+      [data[index], data[index - 1]] = [data[index - 1], data[index]] //caso o elemento a ser realocado não seja o primeiro, é feita a reordenação utilizando desestruturação do vetor
     }
     this.dataSource.data = data;
     this.dataSource.disconnect();
@@ -658,7 +656,7 @@ export class DescritivaComponent implements OnInit {
     this.getFac();
   }
 
-  public clean() {
+  public clean() { //limpa os valores para a realização de um novo cálculo
     this.pieChartLabels = [];
     this.pieChartData = [];
     this.frequencyData = [];

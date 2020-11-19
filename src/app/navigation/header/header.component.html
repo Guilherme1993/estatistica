@@ -1,20 +1,20 @@
 <mat-toolbar color="primary">
-  <div fxHide.gt-xs>
-      <button mat-icon-button (click)="onToggleSidenav()">
-          <mat-icon>menu</mat-icon>
-      </button>
-  </div>
-  <div>
-      <a routerLink="/estatistica-descritiva">Descritiva</a>
-  </div>
-  <div fxFlex fxLayout fxLayoutAlign="end" fxHide.xs>
-      <ul fxLayout fxLayoutGap="15px" class="navigation-items">
-          <li>
-              <a routerLink="/probabilidade">Probabilidades</a>
-          </li>
-          <li>
-              <a routerLink="/correlacao">Correlação</a>
-          </li>
-      </ul>
-  </div>
+    <div fxHide.gt-xs>
+        <button mat-icon-button (click)="onToggleSidenav()">
+            <mat-icon>menu</mat-icon>
+        </button>
+    </div>
+    <div>
+        <a routerLink="/estatistica-descritiva">Descritiva</a>
+    </div>
+    <div fxFlex fxLayout fxLayoutAlign="end" fxHide.xs>
+        <ul fxLayout fxLayoutGap="15px" class="navigation-items">
+            <li>
+                <a routerLink="/probabilidade">Probabilidades</a>
+            </li>
+            <li>
+                <a routerLink="/correlacao">Correlação</a>
+            </li>
+        </ul>
+    </div>
 </mat-toolbar>

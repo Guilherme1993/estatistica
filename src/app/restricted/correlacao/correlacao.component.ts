@@ -12,6 +12,7 @@ import * as pluginAnnotations from 'chartjs-plugin-annotation';
 })
 export class CorrelacaoComponent implements OnInit {
 
+  //INÍCIO DECLARAÇÃO DAS VARIÁVEIS DO GRÁFICO
   public lineChartData: ChartDataSets[] = [
     { data: [], label: 'Correlação' },
   ];
@@ -72,6 +73,7 @@ export class CorrelacaoComponent implements OnInit {
   public lineChartLegend = true;
   public lineChartType = 'line';
   public lineChartPlugins = [pluginAnnotations];
+  //FIM DECLARAÇÃO DAS VARIÁVEIS DO GRÁFICO
 
   public showTable = false;
   public xI = 0;
@@ -98,7 +100,7 @@ export class CorrelacaoComponent implements OnInit {
   ngOnInit() {
   }
 
-  public addValue() {
+  public addValue() { //método para adicionar os valores na tabela
 
     if (this.xI == null || this.xI < 0) {
       this.openSnackBar('É necessário inserir o valor de Xi para prosseguir', 'Campo Obrigatório');
@@ -116,51 +118,51 @@ export class CorrelacaoComponent implements OnInit {
     let xI2 = this.xI ** 2;
     let yI2 = this.yI ** 2;
 
-    let obj = { x: this.xI, y: this.yI, xy: mult, x2: xI2, y2: yI2 }
-    this.tableInfo.push(obj);
+    let obj = { x: this.xI, y: this.yI, xy: mult, x2: xI2, y2: yI2 } // cria um objeto a partir dos cálculos
+    this.tableInfo.push(obj); //adiciona o objeto em um vetor
 
-    this.dataSource.connect();
-    let data = this.dataSource.data;
-    data.push(obj)
+    this.dataSource.connect(); //"ativa" a tabela
+    let data = this.dataSource.data; //cria um variável auxiliar que recebe os dados inseridos na tabela
+    data.push(obj) //insere a nova linha
     if (data.length > 1) {
-      data = this.mergeSort(data, (a, b) => a.x > b.x);
+      data = this.mergeSort(data, (a, b) => a.x > b.x); //caso a tabela possua mais de uma linha, realiza a ordenação a partir dos valores de x
     }
     this.dataSource.data = data;
     this.dataSource.disconnect();
   }
 
   public getTotalX() {
-    this.totalX = this.tableInfo.map(t => t.x).reduce((acc, value) => acc + value, 0);
+    this.totalX = this.tableInfo.map(t => t.x).reduce((acc, value) => acc + value, 0); // soma total de x
     return this.totalX;
   }
 
   public getTotalY() {
-    this.totalY = this.tableInfo.map(t => t.y).reduce((acc, value) => acc + value, 0);
+    this.totalY = this.tableInfo.map(t => t.y).reduce((acc, value) => acc + value, 0); // soma total de y
     return this.totalY;
   }
 
   public getTotalXY() {
-    this.totalXY = this.tableInfo.map(t => t.xy).reduce((acc, value) => acc + value, 0);
+    this.totalXY = this.tableInfo.map(t => t.xy).reduce((acc, value) => acc + value, 0); // soma total de x*y
     return this.totalXY;
   }
 
   public getTotalX2() {
-    this.totalX2 = this.tableInfo.map(t => t.x2).reduce((acc, value) => acc + value, 0);
+    this.totalX2 = this.tableInfo.map(t => t.x2).reduce((acc, value) => acc + value, 0); // soma total de x^2
     return this.totalX2;
   }
 
   public getTotalY2() {
-    this.totalY2 = this.tableInfo.map(t => t.y2).reduce((acc, value) => acc + value, 0);
+    this.totalY2 = this.tableInfo.map(t => t.y2).reduce((acc, value) => acc + value, 0); // soma total de y^2
     return this.totalY2;
   }
 
   public calc() {
 
-    this.tableInfo = this.mergeSort(this.tableInfo, (a, b) => a.x > b.x);
+    this.tableInfo = this.mergeSort(this.tableInfo, (a, b) => a.x > b.x); //ordena o vetor a partir dos valores de x
 
     this.tableInfo.forEach(p => {
-      this.lineChartLabels.push(p.x);
-      this.arrY.push(p.y);
+      this.lineChartLabels.push(p.x); // adiciona os valores de x no eixo x do gráfico (labels)
+      this.arrY.push(p.y); // adiciona os valores de y no eixo y do gráfico (valores)
     })
 
     this.lineChartData = [
@@ -170,7 +172,7 @@ export class CorrelacaoComponent implements OnInit {
     let aux1 = (this.tableInfo.length * this.totalXY) - this.totalX * this.totalY;
     let aux2 = ((this.tableInfo.length * this.totalX2) - (this.totalX ** 2)) * ((this.tableInfo.length * this.totalY2) - (this.totalY ** 2));
 
-    this.valR = aux1 / (Math.sqrt(aux2));
+    this.valR = aux1 / (Math.sqrt(aux2)); // calcula o valor de r
 
     if (this.valR > 0) {
       this.valR *= 100;
@@ -197,13 +199,13 @@ export class CorrelacaoComponent implements OnInit {
     this.showRes = true;
   }
 
-  public calcY() {
+  public calcY() { //calcula a equação da reta a partir dos valores de a, b e x
     this.valY = (this.valA * this.valX) + Number(this.valB);
     this.valY = parseFloat(this.valY).toFixed(2);
     this.showY = true;
   }
 
-  public changeListener(files: FileList) {
+  public changeListener(files: FileList) { //lê o arquivo csv e retorna os valores de x e y em vetores
     if (files && files.length > 0) {
       let file: File = files.item(0);
       let reader: FileReader = new FileReader();

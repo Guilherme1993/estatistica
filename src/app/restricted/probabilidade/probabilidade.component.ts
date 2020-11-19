@@ -34,7 +34,7 @@ export class ProbabilidadeComponent implements OnInit {
 
   public calcular() {
 
-    if (this.selectedType == 1) {
+    if (this.selectedType == 1) { //Distribuição Binomial
 
       if (this.valN == null || this.valN == 0) {
         this.openSnackBar('É necessário inserir o valor de n para prosseguir', 'Campo Obrigatório');
@@ -61,13 +61,13 @@ export class ProbabilidadeComponent implements OnInit {
 
         kValues = this.valK.trim().split(";").map(Number);
 
-        if (kValues.length == 1) {
+        if (kValues.length == 1) { //caso k só tenha um valor, calculo a probabilidade através da fórmula
 
           this.valProbabilidade = (this.valN / kValues[0]) * (this.valP ** kValues[0]) * (this.valQ ** (this.valN - kValues[0]))
           this.valProbabilidade = this.valProbabilidade * 100;
           this.valProbabilidade = parseFloat(this.valProbabilidade).toFixed(2);
 
-        } else {
+        } else { //para k com mais de um valor, é necessário calcular através do fatorial para cada k
           let arrK = [];
 
           for (let k of kValues) {
@@ -85,7 +85,7 @@ export class ProbabilidadeComponent implements OnInit {
             }
             arrK.push(auxK);
           }
-          this.valProbabilidade = this.somaVetor(arrK);
+          this.valProbabilidade = this.somaVetor(arrK); // nesse caso, a probabilidade será a soma dos valores encontrados para cada k
           this.valProbabilidade = parseFloat(this.valProbabilidade).toFixed(2);
         }
 
@@ -93,14 +93,14 @@ export class ProbabilidadeComponent implements OnInit {
       }
 
       this.valMedia = this.valN * this.valP;
-      this.valMedia = parseFloat(this.valMedia).toFixed(2);
+      this.valMedia = parseFloat(this.valMedia).toFixed(2); //cálculo da média com resultado em 2 casas decimais
       let auxDP = this.valN * this.valP * this.valQ;
       this.valDP = Math.sqrt(auxDP);
-      this.valDP = parseFloat(this.valDP).toFixed(2);
+      this.valDP = parseFloat(this.valDP).toFixed(2); //desvio padrão com resultado em 2 casas decimais
       this.valCV = (this.valDP / this.valMedia) * 100;
-      this.valCV = parseFloat(this.valCV).toFixed(2);
+      this.valCV = parseFloat(this.valCV).toFixed(2); //coeficiente de variação com resultado em 2 casas decimais
 
-    } else if (this.selectedType == 2) {
+    } else if (this.selectedType == 2) { //Distribuição Normal
 
       if (this.valMedia == null || this.valMedia == 0) {
         this.openSnackBar('É necessário inserir o valor da média para prosseguir', 'Campo Obrigatório');
@@ -130,27 +130,23 @@ export class ProbabilidadeComponent implements OnInit {
       let z1 = '0';
       let z2 = '0';
 
-      let tabelaNormal = require('./../shared/tabela_normal');
-      tabelaNormal = this.mergeSort(tabelaNormal, (a, b) => a.linha > b.linha)
-      console.log(tabelaNormal)
+      let tabelaNormal = require('./../shared/tabela_normal'); //pego os dados da tabela da distribuição normal
+      tabelaNormal = this.mergeSort(tabelaNormal, (a, b) => a.linha > b.linha) //ordeno a tabela baseando nos valores da linha
 
       if (this.condMin != null && this.condMin > 0 && this.qMin != this.valMedia) {
 
         let aux1 = (this.qMin - this.valMedia) / this.valDP;
 
-        if (aux1 < 0){
-          aux1 = aux1 * (-1);
+        if (aux1 < 0) {
+          aux1 = aux1 * (-1); //caso o valor encontrado seja negativo, deve-se deixá-lo positivo
         }
 
-        z1 = parseFloat(aux1.toString()).toFixed(2);
+        z1 = parseFloat(aux1.toString()).toFixed(2); //valor calculado com 2 casas decimais
 
         let linha = z1.substring(0, 3);
         let coluna = "0.0" + z1.substring(3);
-        console.log(linha)
-        console.log(coluna)
 
-        let index = this.buscaBinaria(tabelaNormal, linha, coluna, this.comparaNome);
-        console.log(tabelaNormal[index])
+        let index = this.buscaBinaria(tabelaNormal, linha, coluna, this.comparaNome); //acho o índice do elemento, baseado no valor da linha e da coluna na tabela
         z1 = tabelaNormal[index].resultado;
 
       }
@@ -159,25 +155,22 @@ export class ProbabilidadeComponent implements OnInit {
 
         let aux2 = (this.qMax - this.valMedia) / this.valDP;
 
-        if (aux2 < 0){
-          aux2 = aux2 * (-1);
+        if (aux2 < 0) {
+          aux2 = aux2 * (-1); //caso o valor encontrado seja negativo, deve-se deixá-lo positivo
         }
 
-        z2 = parseFloat(aux2.toString()).toFixed(2);
+        z2 = parseFloat(aux2.toString()).toFixed(2); //valor calculado com 2 casas decimais
 
         let linha = z2.substring(0, 3);
         let coluna = "0.0" + z2.substring(3);
-        console.log(linha)
-        console.log(coluna)
 
-        let index = this.buscaBinaria(tabelaNormal, linha, coluna, this.comparaNome);
-        console.log(tabelaNormal[index])
+        let index = this.buscaBinaria(tabelaNormal, linha, coluna, this.comparaNome); //acho o índice do elemento, baseado no valor da linha e da coluna na tabela
         z2 = tabelaNormal[index].resultado;
       }
 
-      this.valProbabilidade = ((+z1 + +z2) * 100).toFixed(2);
+      this.valProbabilidade = ((+z1 + +z2) * 100).toFixed(2); //a probabilidade será a soma dos dois valores, com resultado em duas casas decimais.
 
-    } else {
+    } else { //Distribuição Uniforme
 
       if (this.vMin == null || this.vMin == 0) {
         this.openSnackBar('É necessário inserir o valor mínimo para prosseguir', 'Campo Obrigatório');
@@ -200,7 +193,7 @@ export class ProbabilidadeComponent implements OnInit {
       }
 
       this.valMedia = (this.vMin + this.vMax) / 2;
-      this.valMedia = parseFloat(this.valMedia).toFixed(2);
+      this.valMedia = parseFloat(this.valMedia).toFixed(2); //cálculo da média com 2 casas decimais
 
       let intervalo;
 
@@ -212,25 +205,25 @@ export class ProbabilidadeComponent implements OnInit {
 
       this.valProbabilidade = (1 / (this.vMax - this.vMin)) * intervalo;
 
-      this.valProbabilidade = this.valProbabilidade * 100;
+      this.valProbabilidade = this.valProbabilidade * 100; //probabilidade (em porcentagem)
 
       this.valProbabilidade = parseFloat(this.valProbabilidade).toFixed(2);
 
-      let auxDP = ((this.vMax - this.vMin) ** 2) / 12
+      let auxDP = ((this.vMax - this.vMin) ** 2) / 12 //cálculo do desvio padrão
       this.valDP = Math.sqrt(auxDP);
 
-      this.valDP = parseFloat(this.valDP).toFixed(2);
+      this.valDP = parseFloat(this.valDP).toFixed(2); //resultado do desvio padrão com 2 casas decimais
 
       this.valCV = (this.valDP / this.valMedia) * 100;
 
-      this.valCV = parseFloat(this.valCV).toFixed(2);
+      this.valCV = parseFloat(this.valCV).toFixed(2); //coeficiente de variação com 2 casas decimais
 
     }
 
     this.showRes = true;
   }
 
-  public calculaFatorial(valor) {
+  public calculaFatorial(valor) { //recebe um número e calcula o fatorial do mesmo
 
     let fator = 1;
 
@@ -242,7 +235,7 @@ export class ProbabilidadeComponent implements OnInit {
 
   }
 
-  public clear() {
+  public clear() { //limpa os dados para novo cálculo
     this.showRes = false;
     this.valN = 0;
     this.valP = 0;
@@ -260,7 +253,7 @@ export class ProbabilidadeComponent implements OnInit {
     this.qMax = 0;
   }
 
-  public somaVetor(vet) {
+  public somaVetor(vet) { //realiza a soma dos valores em um vetor
 
     let soma = 0;
 

@@ -55,28 +55,13 @@ export class InsertComponent implements OnInit {
         });
 
         this.width = localStorage.getItem('width');
-
-        console.log(this.arr)
     }
 
-    // @HostListener('click', ['$event'])
-    // onClick(event) {
-
-    //     if (event.target.id == 'btnSubmit') {
-
-    //         this.arr = this.appUploadCsv.arr;
-
-    //         this.isCsv = true;
-
-    //     }
-
-    // }
-
-    public closeModal() {
+    public closeModal() { //fecha este stepper e volta para a tela inicial da descritiva
         this.dialogRef.close(true);
     }
 
-    public definePortions(item) {
+    public definePortions(item) { //define os valores a partir da medida separatriz escolhida
         this.measureOptions = []
 
         for (let i = 1; i < item + 1; i++) {
@@ -94,12 +79,6 @@ export class InsertComponent implements OnInit {
     public inputData(item) {
         this.inputWay = item;
     }
-
-    // public processData(event: any): void {
-    //     if (event.selectedIndex == 2) {
-    //         // this.arr = this.arr.trim().split(';')
-    //     }
-    // }
 
     public calc() {
 
@@ -133,7 +112,7 @@ export class InsertComponent implements OnInit {
             return null;
         }
 
-        let result = {
+        let result = { //objeto com os dados inseridos no stepper
             varName: this.variableName,
             arr: this.arr,
             measure: this.selectedMeasure,
@@ -143,14 +122,14 @@ export class InsertComponent implements OnInit {
             isCsv: this.isCsv
         }
 
-        this.dialogRef.close(result);
+        this.dialogRef.close(result); //fecha este stepper e retorna os dados inseridos para a realização do cálculo
     }
 
-    public csv(event) {
-        this.arr = event.arr;
-        let auxArr = event.arr.trim().split('\n')
-        this.variableName = auxArr[0]
-        this.selectedIndex = 2
-        this.isCsv = true;
+    public csv(event) { //upload de csv
+        this.arr = event.arr; //retorna os dados lidos do csv na variável arr
+        let auxArr = event.arr.trim().split('\n') //separa os valores a cada quebra de linha e os retorna em um vetor
+        this.variableName = auxArr[0] //define a primeira linha como o nome da variável
+        this.selectedIndex = 2 //avança para o próximo passo do stepper
+        this.isCsv = true; //define a variável isCsv como true, será utilizada na forma de separação dos dados, para a realização dos cálculos
     }
 }
