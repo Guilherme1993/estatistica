@@ -168,7 +168,29 @@ export class ProbabilidadeComponent implements OnInit {
         z2 = tabelaNormal[index].resultado;
       }
 
-      this.valProbabilidade = ((+z1 + +z2) * 100).toFixed(2); //a probabilidade será a soma dos dois valores, com resultado em duas casas decimais.
+      if (this.condMin > 0 && this.condMax > 0) {
+
+        if (this.qMin <= this.valMedia && this.qMax >= this.valMedia) {
+          this.valProbabilidade = ((+z1 + +z2) * 100).toFixed(2); //a probabilidade será a soma dos dois valores, com resultado em duas casas decimais.
+        } else if (+z1 > +z2) {
+          this.valProbabilidade = ((+z1 - +z2) * 100).toFixed(2);
+        } else {
+          this.valProbabilidade = ((+z2 - +z1) * 100).toFixed(2);
+        }
+
+      } else if ((this.condMin == 1 && this.qMin < this.valMedia) || (this.condMin == 2 && this.qMin > this.valMedia)) {
+
+        this.valProbabilidade = ((0.500 - +z1) * 100).toFixed(2);
+
+      } else if ((this.condMin == 1 && this.qMin > this.valMedia) || (this.condMin == 2 && this.qMin < this.valMedia)) {
+
+        this.valProbabilidade = ((0.500 + +z1) * 100).toFixed(2);
+
+      } else {
+
+        this.valProbabilidade = ((+z1 + +z2) * 100).toFixed(2);
+
+      }
 
     } else { //Distribuição Uniforme
 
