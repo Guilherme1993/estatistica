@@ -212,17 +212,16 @@ export class CorrelacaoComponent implements OnInit {
       reader.readAsText(file);
       reader.onload = (e) => {
         let csv: string = reader.result as string;
-        let csv1 = csv.split("\n")
+        let csv1 = csv.trim().split("\n")
+        csv1.shift();
 
-        let arrX = csv1[0].split(/\s*;\s*/)
-
-        let arrY = csv1[1].split(/\s*;\s*/)
-
-        for (let i = 0; i < arrX.length; i++) {
-          this.xI = parseFloat(arrX[i])
-          this.yI = parseFloat(arrY[i])
-          this.addValue()
+        for (let c of csv1) {
+          let aux = c.split(";").map(Number);
+          this.xI = aux[0];
+          this.yI = aux[1];
+          this.addValue();
         }
+
       }
     }
   }
