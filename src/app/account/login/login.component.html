@@ -1,18 +1,34 @@
-<mat-card>
-  <h2 class="text-center">Login</h2>
+<div class="relative">
+  <div class="form-bg">
+    <div fxFlex fxLayout="column" style="text-align: center;" fxLayoutAlign="center center" fxFlex.xl="100"
+      fxFlex.lg="100" fxFlex.md="100" fxFlex.sm="100" fxFlex.xs="100">
+      <div fxLayout="column">
+        <mat-card class="login-session" style="text-align: left; min-width: 50vh;">
+          <div>
 
-  <form (ngSubmit)="onSubmit()" #form="ngForm">
-    <div class="form-group">
-      <mat-form-field class="example-full-width">
-        <input matInput placeholder="E-mail" required>
-      </mat-form-field>
+            <img src="assets/images/Analytica-removebg.png" style="width: 260px;">
+            <h2 class="base-border">Login</h2>
+            <p>Entre com suas credenciais</p>
+            <form #form="ngForm">
+              <div fxLayout="column" fxLayoutAlign="center center">
+                <mat-form-field style="width: 100%">
+                  <input matInput placeholder="E-mail" type="text" name="email" required [(ngModel)]="login.mail">
+                </mat-form-field>
+                <mat-form-field style="width: 100%">
+                  <input matInput placeholder="Senha" type="password" name="password" required
+                    [(ngModel)]="login.password">
+                </mat-form-field>
+                <div>
+                  <button class="btn-login-margin mat-primary" mat-raised-button style="min-width: 120px;"
+                    (click)="onSubmit()">
+                    ENTRAR
+                  </button>
+                </div>
+              </div>
+            </form>
+          </div>
+        </mat-card>
+      </div>
     </div>
-    <div class="form-group">
-      <mat-form-field class="example-full-width">
-        <input matInput placeholder="Senha" required>
-      </mat-form-field>
-    </div>
-    <button mat-raised-button color="primary">Entrar</button>
-    <button mat-raised-button color="primary" [routerLink]="['/create-account']">Cadastrar</button>
-  </form>
-</mat-card>
+  </div>
+</div>

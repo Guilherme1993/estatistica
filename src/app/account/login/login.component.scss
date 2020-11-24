@@ -1,0 +1,47 @@
+body {
+width: 100vw;
+height: 100vh;
+}
+
+.relative {
+    position: relative;
+}
+
+body .login-session{
+    position: relative;
+    z-index: 99;
+    padding: 2rem !important;
+}
+
+.form-bg {
+    background-image: url("../../../assets/images/background.jpg");
+    background: linear-gradient(-45deg, #2396f1, #62389e) url("../../../assets/images/background.jpg") no-repeat center center / cover;
+}
+
+.form-bg {
+    height: 100vh;
+    background-position: center center;
+    background-size: cover;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    background-size: cover;
+    background-position: top center;
+    min-height: calc(100vh + 100px);
+    height: auto;
+}
+
+.base-border {
+    position: relative;
+    &:after {
+        content: '';
+        display: inline-block;
+        width: 7px;
+        position: absolute;
+        height: calc(100% + 10px);
+        background: red;
+        left: -35px;
+        top: -3px;
+        bottom: 0;
+    }
+}
