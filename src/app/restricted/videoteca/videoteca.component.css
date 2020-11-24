@@ -1,0 +1,20 @@
+.card-wheather {
+    height: 400px;
+    padding: 2rem;
+}
+
+.grad-blue {
+    background: linear-gradient(58deg, #f44336, #673ab7);
+}
+
+.grad-green {
+    background: linear-gradient(58deg, #009688, #673ab7);
+}
+
+.grad-red {
+    background: linear-gradient(58deg, #f44336, #673ab7);
+}
+
+.city {
+    font-size: 18px;
+}

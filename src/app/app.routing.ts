@@ -9,6 +9,7 @@ import { CreateAccountComponent } from './account/create-account/create-account.
 import { LoginComponent } from './account/login/login.component';
 import { ProbabilidadeComponent } from './restricted/probabilidade/probabilidade.component';
 import { CorrelacaoComponent } from './restricted/correlacao/correlacao.component';
+import { VideotecaComponent } from './restricted/videoteca/videoteca.component';
 
 export const AppRoutes: Routes = [{
     path: '',
@@ -29,6 +30,10 @@ export const AppRoutes: Routes = [{
     {
         path: 'correlacao',
         component: CorrelacaoComponent
+    },
+    {
+        path: 'videoteca',
+        component: VideotecaComponent
     }]
 }, {
     path: '',

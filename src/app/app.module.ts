@@ -1,5 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
+import { CommonModule } from '@angular/common';
 
 import { RouterModule } from '@angular/router';
 import { AppRoutes } from './app.routing';
@@ -38,6 +39,7 @@ import { ProbabilidadeComponent } from './restricted/probabilidade/probabilidade
 import { CorrelacaoComponent } from './restricted/correlacao/correlacao.component';
 import { HeaderComponent } from './navigation/header/header.component';
 import { SidenavListComponent } from './navigation/sidenav-list/sidenav-list.component';
+import { VideotecaComponent } from './restricted/videoteca/videoteca.component';
 
 @NgModule({
   declarations: [
@@ -53,11 +55,13 @@ import { SidenavListComponent } from './navigation/sidenav-list/sidenav-list.com
     CorrelacaoComponent,
     HeaderComponent,
     SidenavListComponent,
+    VideotecaComponent,
   ],
   imports: [
     BrowserModule,
     RouterModule.forRoot(AppRoutes),
     FormsModule,
+    CommonModule,
     BrowserAnimationsModule,
     MatInputModule,
     MatButtonModule,
@@ -81,7 +85,8 @@ import { SidenavListComponent } from './navigation/sidenav-list/sidenav-list.com
     MatButtonModule,
     MatIconModule,
     MatToolbarModule,
-    MatListModule
+    MatListModule,
+    FlexLayoutModule
   ],
   providers: [],
   bootstrap: [AppComponent],

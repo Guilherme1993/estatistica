@@ -5,15 +5,24 @@
         </button>
     </div>
     <div>
-        <a routerLink="/estatistica-descritiva">Descritiva</a>
+        <p><i>Analytica</i></p>
     </div>
     <div fxFlex fxLayout fxLayoutAlign="end" fxHide.xs>
         <ul fxLayout fxLayoutGap="15px" class="navigation-items">
+            <li>
+                <a routerLink="/estatistica-descritiva">Descritiva</a>
+            </li>
             <li>
                 <a routerLink="/probabilidade">Probabilidades</a>
             </li>
             <li>
                 <a routerLink="/correlacao">Correlação</a>
+            </li>
+            <li>
+                <a routerLink="/videoteca">Videoteca</a>
+            </li>
+            <li>
+                <a (click)="logout()">Sair</a>
             </li>
         </ul>
     </div>

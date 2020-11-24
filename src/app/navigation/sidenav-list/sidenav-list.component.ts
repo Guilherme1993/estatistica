@@ -1,4 +1,5 @@
 import { Component, OnInit, Output, EventEmitter } from '@angular/core';
+import { Router, NavigationEnd } from '@angular/router';
 
 @Component({
   selector: 'app-sidenav-list',
@@ -9,13 +10,18 @@ export class SidenavListComponent implements OnInit {
 
   @Output() sidenavClose = new EventEmitter();
 
-  constructor() { }
+  constructor(private router: Router) { }
 
   ngOnInit() {
   }
 
   public onSidenavClose = () => {
     this.sidenavClose.emit();
+  }
+
+  public logout() {
+    localStorage.removeItem('token');
+    this.router.navigateByUrl('/login');
   }
 
 }

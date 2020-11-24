@@ -1,0 +1,29 @@
+<div fxLayout="row" fxLayoutWrap="wrap">
+
+  <div fxFlex.sm="100" fxFlex.xs="100" fxFlex.md="50" fxFlex.lg="50" fxFlex.xl="33.3" fxFlex="100" class="m-gap p-gap"
+    *ngFor="let video of listVideos">
+
+    <mat-card>
+
+      <div class="card-wheather">
+
+        <div class="city" style="color: black;">
+          {{ video.title }}
+        </div>
+
+        <hr>
+
+        <div>
+
+          <iframe width="100%" height="250px" [src]="video.url" frameborder="0"
+            allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+
+        </div>
+
+      </div>
+
+    </mat-card>
+
+  </div>
+
+</div>
