@@ -2,8 +2,6 @@
 
 Trabalho realizado na disciplina de Estatística pelo Curso de ADS da Fatec Franca para cálculos envolvendo Estatística Descritiva, Probabilidades, Correlação e Regressão.
 
-Para acessar o projeto, utilize a url: https://guilherme1993.github.io/estatistica/
-
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 6.2.3.
 
 ## Development server
